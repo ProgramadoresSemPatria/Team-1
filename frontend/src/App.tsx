@@ -1,15 +1,11 @@
-import { useState } from 'react'
-import './App.css'
+import "./App.css";
 
 function App() {
-
   return (
     <>
-      <div>
-        Início
-      </div>
+      <div>Início</div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

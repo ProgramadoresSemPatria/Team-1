@@ -23,6 +23,6 @@ def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], sessi
     print("user: ", str(user_instance.username))
     return {"access_token" : create_token({"sub": str(user_instance.username)}), "token_type": "bearer"}
 
-@router.get('/auth', dependencies=[Depends(o_auth_pass_bearer)])
+@router.get('/test-auth', dependencies=[Depends(o_auth_pass_bearer)])
 def auth(token: Annotated[str, Depends(o_auth_pass_bearer)]):
-    return  {"token" : token}
+    return  {"detail" : "You are now authenticated!"}

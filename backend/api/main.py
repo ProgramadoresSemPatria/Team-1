@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from api.routers import auth
+
 description = """
 # Feed AI
 
@@ -21,6 +23,8 @@ app = FastAPI(
         "identifier": "MIT",
     }
 )
+
+app.include_router(auth.router)
 
 @app.get("/")
 def root():

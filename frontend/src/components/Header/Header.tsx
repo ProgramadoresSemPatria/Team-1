@@ -2,13 +2,13 @@ import logo from "../../assets/logo.png";
 
 export const Header = () => {
   return (
-    <div className="header">
-      <div className="header-info">
-        <div className="header-info-left">
+    <div className="header py-5 px-30">
+      <div className="header-info flex place-content-between">
+        <div className="header-info-left flex gap-5 text-gray-600 text-sm">
           <button>English</button>
           <button>Support</button>
         </div>
-        <div className="header-info-right">
+        <div className="header-info-right flex gap-5 text-gray-600 text-sm">
           <button>Blog</button>
           <button>About us</button>
         </div>

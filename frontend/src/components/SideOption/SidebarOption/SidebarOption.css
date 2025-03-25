@@ -1,0 +1,13 @@
+.sidebar-option {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  background-color: transparent;
+  padding: 10px;
+}
+
+.sidebar-option-content {
+  display: flex;
+  gap: 10px 20px;
+  align-items: center;
+}

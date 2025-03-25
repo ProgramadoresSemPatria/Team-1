@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import './App.css'
+import "./App.css";
+import { SideBar } from "./components/SideBar/SideBar";
 
 function App() {
-
   return (
     <>
-      <div>
-        Início
-      </div>
+      <SideBar />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

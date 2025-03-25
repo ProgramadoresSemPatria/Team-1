@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from typing import Annotated
@@ -18,9 +18,10 @@ session_dependency = Annotated[Session, Depends(get_session)] # Help on database
 @router.post('/login')
 def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
     user_instance = session.get(User, form_data.username)
+    if not user_instance:
+        raise HTTPException(status_code=404, detail="User or Password Incorrect")
     if not verify_password(form_data.password, user_instance.password):
-        raise Exception
-    print("user: ", str(user_instance.username))
+        raise HTTPException(status_code=404, detail="User or Password Incorrect")
     return {"access_token" : create_token({"sub": str(user_instance.username)}), "token_type": "bearer"}
 
 @router.get('/test-auth', dependencies=[Depends(o_auth_pass_bearer)])

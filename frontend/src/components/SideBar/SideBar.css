@@ -1,0 +1,38 @@
+.sidebar {
+  width: 15vw;
+  background-color: #1f263e;
+  color: white;
+  box-sizing: border-box;
+  min-height: 100vh;
+  font-family: "Oxygen", sans-serif;
+  padding-left: 20px;
+}
+
+.sidebar-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 20px 20px 0;
+}
+
+.sidebar-logo-image {
+  max-width: 20%;
+}
+
+.sidebar-logo-text {
+  font-weight: lighter;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.sidebar-content-section {
+  padding-bottom: 10px;
+}
+
+.sidebar-content-section-title {
+  font-weight: bold;
+  font-size: 18px;
+  padding-bottom: 10px;
+  line-height: 40px;
+}

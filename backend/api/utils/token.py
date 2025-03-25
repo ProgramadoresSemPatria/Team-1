@@ -1,3 +1,6 @@
+from fastapi import Header, HTTPException
+from typing import Annotated
+
 import os 
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
@@ -28,3 +31,11 @@ def create_token(data:object):
 
 def decode_token(token:str):
     return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+
+def protected_endpoint(Authorization: Annotated[str, Header()]):
+    token = Authorization.removeprefix("Bearer ")
+    try :
+        decode_token(token=token)
+    except :
+        raise HTTPException(status_code=400, detail="Invalid token")
+    return token

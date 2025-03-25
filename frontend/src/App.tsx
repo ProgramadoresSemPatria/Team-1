@@ -1,15 +1,14 @@
-import { useState } from 'react'
-import './App.css'
+import "./App.css";
+import { Header } from "./components/Header/Header";
 
 function App() {
-
   return (
     <>
-      <div>
-        Início
-      </div>
+      <Header
+        options={["Features", "Case Studies", "Pricing", "Applications"]}
+      />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

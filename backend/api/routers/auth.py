@@ -11,11 +11,11 @@ from ..utils.token import verify_password, create_token
 
 router = APIRouter()
 
-o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="token")
+o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="login")
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 
-@router.post('/token')
+@router.post('/login')
 def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
     user_instance = session.get(User, form_data.username)
     if not verify_password(form_data.password, user_instance.password):

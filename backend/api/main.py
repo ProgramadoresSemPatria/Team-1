@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from typing import Annotated
+
+from sqlmodel import Session
 
 from api.routers import auth
+from api.db import create_all_table_and_db, get_session
 
 description = """
 # Feed AI
@@ -25,6 +29,10 @@ app = FastAPI(
 )
 
 app.include_router(auth.router)
+
+@app.on_event("startup")
+def creating_on_startup():
+    create_all_table_and_db()
 
 @app.get("/")
 def root():

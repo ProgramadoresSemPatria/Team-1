@@ -29,13 +29,13 @@ app = FastAPI(
     }
 )
 
-app.include_router(auth.router)
-app.include_router(Users.router)
+app.include_router(auth.router, prefix="/api")
+app.include_router(Users.router, prefix="/api")
 
 @app.on_event("startup")
 def creating_on_startup():
     create_all_table_and_db()
 
-@app.get("/")
+@app.get("/api")
 def root(token: Annotated[protected_endpoint, Depends()]):
     return {"Message": "Hello World!"}

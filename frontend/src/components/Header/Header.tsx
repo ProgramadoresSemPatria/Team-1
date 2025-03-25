@@ -1,6 +1,7 @@
 import logo from "../../assets/logo.png";
 
-export const Header = () => {
+export const Header = (props: { options: Array<string> }) => {
+  const { options } = props;
   return (
     <div className="header py-5 px-30">
       <div className="header-info flex place-content-between">
@@ -19,10 +20,9 @@ export const Header = () => {
             <img className="w-16" src={logo}></img>
             <span className="font-bold text-xl">Feed AI</span>
           </div>
-          <button>Features</button>
-          <button>Case Studies</button>
-          <button>Pricing</button>
-          <button>Applications</button>
+          {options.map((option) => {
+            return <button>{option}</button>;
+          })}
         </div>
         <div className="header-options-right">
           <button className="bg-blue-400 p-2 px-8 rounded-md text-white font-bold">

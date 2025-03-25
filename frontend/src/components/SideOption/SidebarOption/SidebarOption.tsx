@@ -7,7 +7,7 @@ export const SidebarOption = (props: {
   icon: string;
   text: string;
   arrowNeeded: boolean;
-  arrowDirection?: "right" | "left";
+  arrowDirection?: "right" | "down";
 }) => {
   const { icon, text, arrowNeeded = false, arrowDirection = "right" } = props;
   return (

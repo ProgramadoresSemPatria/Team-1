@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Header, HTTPException
 from typing import Annotated
 
 from sqlmodel import Session
 
 from api.routers import auth, Users
 from api.db import create_all_table_and_db, get_session
+from api.utils.token import decode_token, protected_endpoint
 
 description = """
 # Feed AI
@@ -36,5 +37,5 @@ def creating_on_startup():
     create_all_table_and_db()
 
 @app.get("/")
-def root():
+def root(token: Annotated[protected_endpoint, Depends()]):
     return {"Message": "Hello World!"}

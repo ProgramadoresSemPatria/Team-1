@@ -8,10 +8,14 @@ from sqlmodel import Session, select
 from ..db import get_session
 from ..db.Users import User, CreateUser
 from ..utils.token import verify_password, create_token
+from ..enum.TagsEnum import TagsEnum
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/auth",
+    tags=[TagsEnum.auth]
+)
 
-o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="login")
+o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 

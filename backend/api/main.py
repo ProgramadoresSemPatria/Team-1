@@ -3,7 +3,7 @@ from typing import Annotated
 
 from sqlmodel import Session
 
-from api.routers import auth
+from api.routers import auth, Users
 from api.db import create_all_table_and_db, get_session
 
 description = """
@@ -29,6 +29,7 @@ app = FastAPI(
 )
 
 app.include_router(auth.router)
+app.include_router(Users.router)
 
 @app.on_event("startup")
 def creating_on_startup():

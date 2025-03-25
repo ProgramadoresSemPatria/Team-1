@@ -25,3 +25,6 @@ def create_token(data:object):
     expiration = str(int(expiration.timestamp()))
     payload.update({"exp" : expiration})
     return jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
+
+def decode_token(token:str):
+    return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])

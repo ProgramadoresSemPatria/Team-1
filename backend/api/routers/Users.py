@@ -5,14 +5,18 @@ from sqlmodel import Session
 
 from ..db.Users import CreateUser, User, BaseUser
 from ..db import get_session
+from ..enum.TagsEnum import TagsEnum
 
 from ..utils.token import create_hash_password
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users",
+    tags=[TagsEnum.users]
+)
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 
-@router.post('/users', response_model=BaseUser)
+@router.post('/', response_model=BaseUser)
 def create_user(user: CreateUser, session: session_dependency):
     user_to_db = User.model_validate(user)
     input_password = user_to_db.password

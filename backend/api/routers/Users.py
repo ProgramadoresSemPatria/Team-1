@@ -56,4 +56,11 @@ def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
 @router.get("/", response_model=list[RetrieveUser])
 def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
-    return users   
+    return users
+
+@router.get("/{user_id}", response_model=RetrieveUser)
+def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
+    user_db = session.get(Users, user_id)
+    if not user_db :
+        raise HTTPException(status_code=404, detail="User not founded")
+    return user_db

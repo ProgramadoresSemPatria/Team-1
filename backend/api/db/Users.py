@@ -21,3 +21,12 @@ class CreateUser(BaseUser):
 class UserIn(BaseModel):
     email: EmailStr
     password: str
+
+class UpdateUser(BaseUser):
+    name: str | None = Field(default=None, index=True)
+    username: str | None = Field(default=None, index=True)
+    email: EmailStr | None = Field(default=None, unique=True, nullable=False, index=True)
+    cpf: str | None = Field(default=None, )
+    cnpj: str | None = Field(default=None, unique=True)
+    company_name: str | None = Field(default=None, )
+    company_type: str | None = Field(default=None, )

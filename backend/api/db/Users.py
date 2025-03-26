@@ -30,3 +30,6 @@ class UpdateUser(BaseUser):
     cnpj: str | None = Field(default=None, unique=True)
     company_name: str | None = Field(default=None, )
     company_type: str | None = Field(default=None, )
+
+class RetrieveUser(BaseUser):
+    id: int

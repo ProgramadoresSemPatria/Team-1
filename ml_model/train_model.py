@@ -37,12 +37,10 @@ def get_most_common_words_table(df,sentiment_label, n=10):
         return pd.DataFrame(columns=['Word','Frequency'])
     
 
-
+print("positivos")
 print(get_most_common_words_table(df, 'positivo'))
-
-
+print("negativos")
 print(get_most_common_words_table(df, 'negativo'))
-
-
+print("neutros")
 print(get_most_common_words_table(df, 'neutro'))
 

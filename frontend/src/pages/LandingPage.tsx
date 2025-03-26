@@ -19,7 +19,7 @@ export function LandingPage() {
         <AspectRatio ratio={16 / 9} className="w-full p-10">
           <img src={HeroImage} alt="Landing Page" className="rounded-lg" />
         </AspectRatio>
-        <Button className="mt-16 w-1/2 bg-sky-700 text-white">
+        <Button className="mt-16 w-1/2 bg-sky-700 text-white md:mt-32">
           Get Started
         </Button>
       </div>

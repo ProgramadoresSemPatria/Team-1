@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, create_engine, Session, select
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 class BaseUser(SQLModel):
     name: str = Field(index=True)
@@ -16,4 +16,8 @@ class Users(BaseUser, table=True):
     
 
 class CreateUser(BaseUser):
+    password: str
+
+class UserIn(BaseModel):
+    email: EmailStr
     password: str

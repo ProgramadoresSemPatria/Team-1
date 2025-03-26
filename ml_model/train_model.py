@@ -1,6 +1,8 @@
 import pandas as pd 
+import nltk 
+import re
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
 
 df = pd.read_csv("dataset/reduced_reviews.csv")
-
-print(df[['Text', 'Score', 'Sentiment']].head(10))
-print(df['Sentiment'].value_counts())

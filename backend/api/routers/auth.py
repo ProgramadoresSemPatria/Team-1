@@ -6,7 +6,7 @@ from typing import Annotated
 from sqlmodel import Session, select
 
 from ..db import get_session
-from ..db.Users import User, CreateUser
+from ..db.Users import Users, CreateUser
 from ..utils.token import verify_password, create_token
 from ..enum.TagsEnum import TagsEnum
 
@@ -21,7 +21,7 @@ session_dependency = Annotated[Session, Depends(get_session)] # Help on database
 
 @router.post('/login/swagger')
 def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
-    user_instance = session.get(User, form_data.username)
+    user_instance = session.get(Users, form_data.username)
     if not user_instance:
         raise HTTPException(status_code=404, detail="User or Password Incorrect")
     if not verify_password(form_data.password, user_instance.password):

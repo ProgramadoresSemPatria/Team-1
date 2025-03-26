@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Body, Path, HTTPException
 from typing import Annotated
 
-from sqlmodel import Session
+from sqlmodel import Session, select
 
-from ..db.Users import CreateUser, Users, BaseUser, UpdateUser
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 
@@ -49,3 +49,8 @@ def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
     session.delete(user_db)
     session.commit()
     return {"message":"User deleted"}
+
+@router.get("/", response_model=list[RetrieveUser])
+def retrieve_all_users(session: session_dependency):
+    users = session.exec(select(Users)).all()
+    return users

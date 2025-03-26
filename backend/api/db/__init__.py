@@ -6,7 +6,12 @@ load_dotenv()
 
 from .Users import BaseUser, CreateUser, Users
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = (
+    f"postgresql://{os.getenv('POSTGRESQL_USERNAME')}:"
+    f"{os.getenv('POSTGRESQL_PASSWORD')}@localhost:5432/"
+    f"{os.getenv('POSTGRESQL_DATABASE')}"
+)
+
 engine = create_engine(
     DATABASE_URL, 
 )

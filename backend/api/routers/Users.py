@@ -22,7 +22,10 @@ def create_user(user: CreateUser, session: session_dependency):
     input_password = user_to_db.password
     user_to_db.password = create_hash_password(input_password)
     session.add(user_to_db)
-    session.commit()
+    try:
+        session.commit()
+    except Exception as e :
+        raise HTTPException(status_code=400, detail=str(e._message()))
     session.refresh(user_to_db)
     return user_to_db
 
@@ -53,4 +56,4 @@ def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
 @router.get("/", response_model=list[RetrieveUser])
 def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
-    return users
+    return users   

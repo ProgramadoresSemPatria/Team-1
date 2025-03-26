@@ -15,11 +15,11 @@ router = APIRouter(
     tags=[TagsEnum.auth]
 )
 
-o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="/api/auth/login/swagger")
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 
-@router.post('/login')
+@router.post('/login/swagger')
 def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
     user_instance = session.get(User, form_data.username)
     if not user_instance:

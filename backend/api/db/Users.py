@@ -10,7 +10,7 @@ class BaseUser(SQLModel):
     company_name: str
     company_type: str
 
-class User(BaseUser, table=True):
+class Users(BaseUser, table=True):
     id: int | None = Field(default=None, primary_key=True)
     password: str 
     

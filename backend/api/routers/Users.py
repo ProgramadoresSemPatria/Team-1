@@ -40,3 +40,12 @@ def update_user(user_id:Annotated[int, Path()], user:Annotated[UpdateUser, Body(
     session.refresh(user_db)
 
     return user_db
+
+@router.delete('/{user_id}')
+def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
+    user_db = session.get(Users, user_id)
+    if not user_db :
+        raise HTTPException(status_code=404, detail="User not founded")
+    session.delete(user_db)
+    session.commit()
+    return {"message":"User deleted"}

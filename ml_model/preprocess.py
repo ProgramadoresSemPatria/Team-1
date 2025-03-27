@@ -24,6 +24,7 @@ def clear_text(text):
     return ' '.join(filtered_word)
 
 
+
 def get_most_common_words_table(df,sentiment_label, n=10):
     texts = df[df["Sentiment"] == sentiment_label]['Text'],
     all_words = ' '.join(texts).split()
@@ -34,3 +35,5 @@ def get_most_common_words_table(df,sentiment_label, n=10):
     else:
         return pd.DataFrame(columns=['Word','Frequency'])
     
+
+

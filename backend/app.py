@@ -18,7 +18,12 @@ def predict_from_csv():
     
     X = vectorizer.transform(df['Text'])
     
-    df =['Sentiment_Prediction'] = model.predict(X)
+    df['Sentiment_Prediction'] = model.predict(X)
     
     result = df[['Text', 'Sentiment_Prediction']].to_dict(orient='records')
+    
+    return jsonify(result)
+
+if __name__ == '__main__':
+    app.run(debug=True)
     

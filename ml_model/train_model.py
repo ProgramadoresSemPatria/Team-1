@@ -31,3 +31,5 @@ os.makedirs("ml_model/model", exist_ok=True)
 joblib.dump(model, "ml_model/model/modelo_sentimento.pkl")
 
 joblib.dump(vectorizer, "ml_model/model/vectorizer.pkl")
+
+print("modelo salvo")

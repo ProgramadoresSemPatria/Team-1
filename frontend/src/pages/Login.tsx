@@ -3,7 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TriangleAlert } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 export function Login() {
@@ -26,15 +28,19 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center md:gap-80 md:flex-row">
+    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center md:gap-80 md:flex-row">
       <div className="flex flex-col items-center justify-center w-screen md:w-[40vh]">
-        <img src={FeedAI_Logo} alt="FeedAI logo" className="h-40 w-40" />
-        <h1 className="mt-10 text-5xl whitespace-nowrap">
+        <img
+          src={FeedAI_Logo}
+          alt="FeedAI logo"
+          className="h-40 w-40 md:h-60 md:w-60  "
+        />
+        <h1 className="mt-10 text-5xl whitespace-nowrap md:text-6xl">
           Hello, <span className="text-sky-400">Welcome!</span>
         </h1>
-        <p className="my-5 text-xl">Access your account right now!</p>
+        <p className="my-5 text-xl md:text-2xl">Access your account right now!</p>
       </div>
-      <Card className="flex flex-col items-center justify-start px-6 md:w-[40vh] md:p-10">
+      <Card className="flex flex-col items-center justify-start px-6 md:w-[40vh] md:px-10 md:pt-6">
         <h2 className="text-3xl mt-4 mb-2 text-sky-400 font-bold md:text-4xl">
           Sign in to your account
         </h2>
@@ -51,7 +57,10 @@ export function Login() {
               {...register('email')}
             />
             {errors.email && (
-              <span className="text-red-500">{errors.email?.message}</span>
+              <div className="flex items-center gap-2">
+                <TriangleAlert className="w-4 h-4 text-red-500" />
+                <span className="text-red-500">{errors.email?.message}</span>
+              </div>
             )}
           </div>
           <div className="flex flex-col gap-2 mt-4">
@@ -65,7 +74,10 @@ export function Login() {
               {...register('password')}
             />
             {errors.password && (
-              <span className="text-red-500">{errors.password?.message}</span>
+              <div className="flex items-center gap-2">
+                <TriangleAlert className="w-4 h-4 text-red-500" />
+                <span className="text-red-500">{errors.password?.message}</span>
+              </div>
             )}
           </div>
           <div className="flex flex-col items-center">
@@ -76,13 +88,14 @@ export function Login() {
               Sign in
             </Button>
             <CardFooter>
-              <p className="text-xl md:text-2xl">
+              <p className="text-lg md:text-xl md:mt-4">
                 New to FeedAI?{' '}
                 <Button
+                  asChild
                   variant="link"
-                  className="hover:cursor-pointer hover:text-blue-700 text-blue-600 mx-0 px-0 text-xl md:text-2xl"
+                  className="text-blue-600 hover:text-blue-700 text-lg md:text-xl px-0"
                 >
-                  Create account
+                  <Link to="/register">Create account</Link>
                 </Button>
               </p>
             </CardFooter>

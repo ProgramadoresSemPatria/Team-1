@@ -2,15 +2,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 df = pd.read_csv('dataset/reduced_reviews.csv')
 
-print (df.head())
-print(df["Sentiment"].value_counts())
-
-
-from sklearn.feature_extraction.text import CountVectorizer
 
 vectorizer = CountVectorizer(max_features=5000)
 
@@ -28,3 +24,5 @@ model.fit(X_train,y_train)
 
 y_pred = model.predict(X_test)
 
+print("classification report:")
+print (classification_report(y_test,y_pred))

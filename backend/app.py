@@ -20,4 +20,5 @@ def predict_from_csv():
     
     df =['Sentiment_Prediction'] = model.predict(X)
     
-        
+    result = df[['Text', 'Sentiment_Prediction']].to_dict(orient='records')
+    

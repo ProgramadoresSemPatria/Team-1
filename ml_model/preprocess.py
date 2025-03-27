@@ -9,7 +9,6 @@ nltk.download('punkt')
 import matplotlib.pyplot as plt 
 from collections import Counter
 
-df = pd.read_csv("dataset/reduced_reviews.csv")
 
 stop_words = set(stopwords.words('english'))
 
@@ -24,7 +23,6 @@ def clear_text(text):
     filtered_word = [p for p in word if p not in stop_words]
     return ' '.join(filtered_word)
 
-df['Text'] = df ['Text'].apply(clear_text)
 
 def get_most_common_words_table(df,sentiment_label, n=10):
     texts = df[df["Sentiment"] == sentiment_label]['Text'],
@@ -36,11 +34,3 @@ def get_most_common_words_table(df,sentiment_label, n=10):
     else:
         return pd.DataFrame(columns=['Word','Frequency'])
     
-
-print("positivos")
-print(get_most_common_words_table(df, 'positivo'))
-print("negativos")
-print(get_most_common_words_table(df, 'negativo'))
-print("neutros")
-print(get_most_common_words_table(df, 'neutro'))
-

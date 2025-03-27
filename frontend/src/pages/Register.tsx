@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
+import { Label } from '@/components/ui/label';
 
 export function Register() {
   const [step, setStep] = useState(1);
@@ -79,7 +80,7 @@ export function Register() {
     const result = schema.safeParse(values);
     if (!result?.success) {
       for (const error of result.error.errors) {
-        console.log("error:", error)
+        console.log('error:', error);
         const field = error.path[0] as keyof z.infer<typeof loginFormSchema>;
         const message = error.message;
         setError(field, { message });
@@ -164,9 +165,9 @@ export function Register() {
               {step === 1 && (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="name" className="font-bold">
+                    <Label htmlFor="name" className="font-bold">
                       Name
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       className="border px-1"
@@ -180,9 +181,9 @@ export function Register() {
                     )}
                   </div>{' '}
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="CPF" className="font-bold">
+                    <Label htmlFor="CPF" className="font-bold">
                       CPF
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       className="border px-1"
@@ -196,9 +197,9 @@ export function Register() {
                     )}
                   </div>{' '}
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="birthdate" className="font-bold">
+                    <Label htmlFor="birthdate" className="font-bold">
                       Birthdate
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       className="border px-1"
@@ -215,9 +216,9 @@ export function Register() {
               {step === 2 && (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="enterpriseName" className="font-bold">
+                    <Label htmlFor="enterpriseName" className="font-bold">
                       Enterprise name
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       className="border px-1"
@@ -231,9 +232,9 @@ export function Register() {
                     )}
                   </div>{' '}
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="businessType" className="font-bold">
+                    <Label htmlFor="businessType" className="font-bold">
                       Business type
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       className="border px-1"
@@ -247,9 +248,9 @@ export function Register() {
                     )}
                   </div>{' '}
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="businessType" className="font-bold">
+                    <Label htmlFor="CNPJ" className="font-bold">
                       CNPJ
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       className="border px-1"
@@ -267,9 +268,9 @@ export function Register() {
               {step === 3 && (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className="font-bold">
+                    <Label htmlFor="email" className="font-bold">
                       Enter your Email
-                    </label>
+                    </Label>
                     <Input
                       type="email"
                       className="border px-1"
@@ -283,9 +284,9 @@ export function Register() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="password" className="font-bold">
+                    <Label htmlFor="password" className="font-bold">
                       Enter your password
-                    </label>
+                    </Label>
                     <Input
                       type="password"
                       className="border"
@@ -299,9 +300,9 @@ export function Register() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="confirmPassword" className="font-bold">
+                    <Label htmlFor="confirmPassword" className="font-bold">
                       Confirm password
-                    </label>
+                    </Label>
                     <Input
                       type="password"
                       className="border px-1"

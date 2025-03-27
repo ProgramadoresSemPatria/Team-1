@@ -29,3 +29,5 @@ print (classification_report(y_test,y_pred))
 os.makedirs("ml_model/model", exist_ok=True)
 
 joblib.dump(model, "ml_model/model/modelo_sentimento.pkl")
+
+joblib.dump(vectorizer, "ml_model/model/vectorizer.pkl")

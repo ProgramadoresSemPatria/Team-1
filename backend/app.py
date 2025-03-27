@@ -14,3 +14,10 @@ def predict_from_csv():
     file = request.files['file']
     df = pd.read_csv(file)
     
+    df['Text'] = df['Text'].apply(clear_text)
+    
+    X = vectorizer.transform(df['Text'])
+    
+    df =['Sentiment_Prediction'] = model.predict(X)
+    
+        

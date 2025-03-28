@@ -8,6 +8,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 import matplotlib.pyplot as plt 
 from collections import Counter
+import unicodedata 
 
 
 stop_words = set(stopwords.words('english'))

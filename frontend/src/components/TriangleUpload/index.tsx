@@ -1,0 +1,224 @@
+import { cn } from "@/lib/utils";
+import { BarChart2, FileText, Upload } from "lucide-react";
+import { Button } from "../ui/button";
+import { useRef, useState } from "react";
+
+const TriangleUpload = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const droppedFile = e.dataTransfer.files[0];
+        {/* biome-ignore lint: */}
+    if (droppedFile && droppedFile.name.endsWith(".csv")) {
+      setFile(droppedFile);
+      setError(null);
+    } else {
+      setError("Por favor, selecione um arquivo CSV válido.");
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+        {/* biome-ignore lint: */}
+    if (selectedFile && selectedFile.name.endsWith(".csv")) {
+      setFile(selectedFile);
+      setError(null);
+    } else {
+      setError("Por favor, selecione um arquivo CSV válido.");
+    }
+  };
+
+  const handleProcessFile = async () => {
+    if (!file) return;
+
+    setIsProcessing(true);
+    setError(null);
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    try {
+      // Aqui você faria a chamada real para o backend
+      // const formData = new FormData()
+      // formData.append('file', file)
+      // const response = await fetch('/api/analyze', {
+      //   method: 'POST',
+      //   body: formData
+      // })
+
+      // if (!response.ok) throw new Error('Falha ao processar o arquivo')
+
+      setIsProcessing(false);
+      setIsComplete(true);
+    } catch (err) {
+      setIsProcessing(false);
+      setError("Ocorreu um erro ao processar seu arquivo. Tente novamente.");
+    }
+  };
+
+  const resetUpload = () => {
+    setFile(null);
+    setIsProcessing(false);
+    setIsComplete(false);
+    setError(null);
+  };
+
+  return (
+    <div className="relative flex justify-center items-center h-full">
+   <div
+    className={cn(
+      "absolute w-[600px] h-[600px] rounded-full transition-all duration-300",
+      isProcessing
+        ? "animate-[spin_3s_linear_infinite] border-gradient-outer"
+        : "border-[15px] border-gray-300 opacity-50",
+        isComplete && "border-green-500",
+        error && "border-red-500"
+    )}
+  />
+
+  <div
+    className={cn(
+      "absolute w-[500px] h-[500px] rounded-full transition-all duration-300",
+      isProcessing
+        ? "animate-[spin_3s_linear_infinite] border-gradient-inner"
+        : "border-[30px] border-gray-400 opacity-60",
+        isComplete && "border-green-500",
+        error && "border-red-500"
+    )}
+  />
+      <div
+        className={cn(
+          "w-[500px] h-[420px] relative transition-all duration-500",
+        )}
+      >
+        {/* biome-ignore lint: */}
+        <div
+          className={cn(
+            "absolute w-0 h-0 left-1/2 -translate-x-1/2",
+            "border-l-[225px] border-r-[225px] border-b-[390px]",
+            "border-l-transparent border-r-transparent",
+            isComplete ? "border-b-green-500" : "border-b-black"
+          )}
+        ></div>
+
+        {/* biome-ignore lint: */}
+        <div
+          className="absolute w-0 h-0 left-1/2 -translate-x-1/2 top-[40px]
+                      border-l-[185px] border-r-[185px] border-b-[320px]
+                      border-l-transparent border-r-transparent border-b-white"
+        ></div>
+
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ transform: "translateY(40px)" }}
+        >
+        {/* biome-ignore lint: */}
+          <div
+            className={cn(
+              "w-[300px] h-[200px] flex flex-col items-center justify-center p-4 text-center",
+              isDragging ? "bg-blue-50 bg-opacity-50 rounded-lg" : "",
+              isProcessing && "animate-[spin_3s_linear_infinite]"
+            )}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() =>
+              !file && !isComplete && fileInputRef.current?.click()
+            }
+          >
+            {!file && !isComplete && (
+              <>
+                <h2 className="text-3xl font-bold text-black mb-4">FeedAI</h2>
+                <Upload className="w-10 h-10 text-black mb-3" />
+                <p className="text-black font-semibold mb-1">
+                  Drag & Drop your CSV file here
+                </p>
+                <p className="text-sm text-gray-700">
+                  or click to select a file
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </>
+            )}
+
+            {file && !isProcessing && !isComplete && (
+              <>
+                <h2 className="text-3xl font-bold text-black mb-3">FeedAI</h2>
+                <div className="flex items-center gap-2 mb-3">
+                  <FileText className="w-5 h-5 text-black" />
+                  <span className="font-medium text-gray-700 truncate max-w-[180px]">
+                    {file.name}
+                  </span>
+                </div>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 mb-2"
+                  onClick={handleProcessFile}
+                >
+                  Generate Insights
+                </Button>
+                <Button variant="ghost" size="sm" onClick={resetUpload}>
+                  Other File
+                </Button>
+              </>
+            )}
+
+            {isProcessing && (
+              <>
+                <h2 className="text-3xl font-bold text-black mb-3">FeedAI</h2>
+                <BarChart2 className="w-10 h-10 text-black mb-3 animate-pulse" />
+                <p className="text-black">Processing data...</p>
+                <p className="text-sm text-black mt-1">
+                  Generating insights with AI
+                </p>
+              </>
+            )}
+
+            {isComplete && (
+              <>
+                <h2 className="text-3xl font-bold text-black mb-3">FeedAI</h2>
+                <p className="text-green-700 mb-3">Analysis Completed!</p>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 mb-2"
+                  onClick={() => {}}
+                >
+                  View Insights
+                </Button>
+                <Button variant="outline" size="sm" onClick={resetUpload}>
+                  New file
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      {error && (
+        <div className="absolute -bottom-4 bg-red-50 text-red-700 p-3 rounded-lg max-w-md text-center">
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TriangleUpload;

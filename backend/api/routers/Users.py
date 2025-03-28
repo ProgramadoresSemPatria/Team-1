@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Body, Path, HTTPException
 from typing import Annotated
 
-from sqlmodel import Session
+from sqlmodel import Session, select
 
-from ..db.Users import CreateUser, Users, BaseUser, UpdateUser
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 
@@ -22,7 +22,10 @@ def create_user(user: CreateUser, session: session_dependency):
     input_password = user_to_db.password
     user_to_db.password = create_hash_password(input_password)
     session.add(user_to_db)
-    session.commit()
+    try:
+        session.commit()
+    except Exception as e :
+        raise HTTPException(status_code=400, detail=str(e._message()))
     session.refresh(user_to_db)
     return user_to_db
 
@@ -39,4 +42,25 @@ def update_user(user_id:Annotated[int, Path()], user:Annotated[UpdateUser, Body(
     session.commit()
     session.refresh(user_db)
 
+    return user_db
+
+@router.delete('/{user_id}')
+def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
+    user_db = session.get(Users, user_id)
+    if not user_db :
+        raise HTTPException(status_code=404, detail="User not founded")
+    session.delete(user_db)
+    session.commit()
+    return {"message":"User deleted"}
+
+@router.get("/", response_model=list[RetrieveUser])
+def retrieve_all_users(session: session_dependency):
+    users = session.exec(select(Users)).all()
+    return users
+
+@router.get("/{user_id}", response_model=RetrieveUser)
+def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
+    user_db = session.get(Users, user_id)
+    if not user_db :
+        raise HTTPException(status_code=404, detail="User not founded")
     return user_db

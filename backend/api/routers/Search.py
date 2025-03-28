@@ -1,7 +1,8 @@
 from fastapi import APIRouter, File, UploadFile, Body, Depends, Query
 from typing import Annotated
 import pandas as pd
-from sqlmodel import Session
+from sqlmodel import Session, select
+from sqlalchemy import func
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -47,3 +48,21 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
 async def find_feedback(keywords:Annotated[list[str], Body()]):
     # ALL THE AI LOGIC HERE
     return {"message": "We are searching for feedbacks for you, please wait until finish!", "keywords": keywords}
+
+@router.get('/input/group/')
+def results_by_day(session: session_dependency):
+    statement = (
+        select(
+            func.strftime('%Y-%m-%d %H:%M:%S', AiResponse.consulted_query_date),
+            AiResponse.sentiment_prediction,
+            func.count(AiResponse.id)
+        )
+        .group_by(func.strftime('%Y-%m-%d %H:%M:%S', AiResponse.consulted_query_date), AiResponse.sentiment_prediction)
+    )
+
+    results = session.exec(statement).all()
+    to_return = [
+        {"date": result[0], "sentiment": result[1], "count": result[2]}
+        for result in results
+    ]
+    return to_return

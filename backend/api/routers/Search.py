@@ -1,11 +1,17 @@
-from fastapi import APIRouter, File, UploadFile, Body
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query
 from typing import Annotated
 import pandas as pd
+from sqlmodel import Session
+from pydantic import BaseModel
+from datetime import datetime
 
 import joblib
 
 from ..enum.TagsEnum import TagsEnum
 from ml_model.preprocess import clear_text
+from ..db import get_session
+from ..db.AIResponse import AiResponse
+
 
 router = APIRouter(
     prefix="/search",
@@ -14,16 +20,26 @@ router = APIRouter(
 
 model = joblib.load('ml_model/model/modelo_sentimento.pkl') 
 vectorizer = joblib.load('ml_model/model/vectorizer.pkl') 
+session_dependency = Annotated[Session, Depends(get_session)]
+
 
 @router.post('/input')
-async def upload_file(file: Annotated[UploadFile, File()]):
+async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency):
     df = pd.read_csv(file.file)
 
     df['Text'] = df['Text'].apply(clear_text)
 
     X = vectorizer.transform(df['Text'])
     df['Sentiment_Prediction'] = model.predict(X)
+    df_table = df.copy()
     result = df[['Text', 'Sentiment_Prediction']].to_dict(orient='records')
+
+
+    df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
+    df_table["consulted_query_date"] = datetime.now()
+    df_table_dict = df_table.to_dict(orient='records')
+    session.bulk_insert_mappings(AiResponse, df_table_dict)
+    session.commit()
 
     return result
 

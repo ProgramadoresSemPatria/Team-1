@@ -15,6 +15,8 @@ stop_words = set(stopwords.words('english'))
 
 def clear_text(text):
     text = text.lower()
+    text = unicodedata.normalize("NFKD",text).encode('ascii','ignore').decode('utf-8','ignore')
+    
     text = re.sub(r'http\S+|www\S+|https\S+', '', text)
     text = re.sub(r'<.*?>', '', text)
     text = re.sub(r'\bbr\b', '', text)

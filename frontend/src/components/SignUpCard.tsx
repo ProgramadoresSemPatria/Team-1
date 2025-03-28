@@ -47,37 +47,35 @@ export function SignUpCard() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center md:px-10">
-      <Card className="md:w-[80vh]">
-        <CardHeader>
-          <CardTitle className="text-center">
-            Create your FeedAI account
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormProvider {...form}>
-            <form onSubmit={handleSubmit}>
-              <Stepper
-                steps={[
-                  {
-                    label: 'Personal Information',
-                    content: <PersonalInfoStep />,
-                  },
-                  {
-                    label: 'Enterprise Information',
-                    content: <EnterpriseInfoStep />,
-                  },
+    <Card className="mx-26 lg:w-[50vh] lg:p-6">
+      <CardHeader>
+        <CardTitle className="text-center text-xl lg:text-3xl">
+          Create your FeedAI account
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit}>
+            <Stepper
+              steps={[
+                {
+                  label: 'Personal Information',
+                  content: <PersonalInfoStep />,
+                },
+                {
+                  label: 'Enterprise Information',
+                  content: <EnterpriseInfoStep />,
+                },
 
-                  {
-                    label: 'Account Information',
-                    content: <AccountInfoStep />,
-                  },
-                ]}
-              />
-            </form>
-          </FormProvider>
-        </CardContent>
-      </Card>
-    </div>
+                {
+                  label: 'Account Information',
+                  content: <AccountInfoStep />,
+                },
+              ]}
+            />
+          </form>
+        </FormProvider>
+      </CardContent>
+    </Card>
   );
 }

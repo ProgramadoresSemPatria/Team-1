@@ -20,8 +20,8 @@ export function Register() {
   if (!isMounted) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-10 bg-gray-100 md:flex-row md:justify-around">
-      <div className="flex flex-col items-center justify-center w-screen md:hidden">
+    <div className="flex flex-col items-center min-h-screen justify-center gap-10 bg-gray-100 lg:flex-row lg:gap-30">
+      <div className="flex flex-col items-center justify-center w-screen lg:hidden">
         <WelcomeMessageSignUp />
       </div>
 
@@ -29,11 +29,12 @@ export function Register() {
         initial={{ opacity: 0, y: isMobile ? 100 : -100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="flex flex-col items-center lg:ml-60 justify-center w-screen lg:w-full lg:h-screen"
       >
         <SignUpCard />
       </motion.div>
 
-      <div className="hidden items-center justify-center w-screen md:w-full md:h-screen md:flex md:flex-col">
+      <div className="hidden items-start justify-center  lg:w-full lg:h-screen lg:flex lg:flex-col">
         <WelcomeMessageSignUp />
       </div>
     </div>

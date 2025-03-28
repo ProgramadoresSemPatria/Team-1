@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import type { SignUpFormData } from '../SignUpCard';
+import { TriangleAlert } from 'lucide-react';
 
 export const enterpriseInfoSchema = z.object({
   CNPJ: z.string().min(1, { message: 'Please, provide a valid CNPJ' }),
@@ -44,9 +45,12 @@ export function EnterpriseInfoStep() {
           {...form.register('enterpriseInfo.enterpriseName')}
         />
         {form.formState.errors.enterpriseInfo?.enterpriseName && (
-          <span className="text-red-500">
-            {form.formState.errors.enterpriseInfo?.enterpriseName?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.enterpriseInfo?.enterpriseName?.message}
+            </span>
+          </div>
         )}
       </div>{' '}
       <div className="flex flex-col gap-2">
@@ -60,9 +64,12 @@ export function EnterpriseInfoStep() {
           {...form.register('enterpriseInfo.businessType')}
         />
         {form.formState.errors.enterpriseInfo?.businessType && (
-          <span className="text-red-500">
-            {form.formState.errors.enterpriseInfo?.businessType?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.enterpriseInfo?.businessType?.message}
+            </span>
+          </div>
         )}
       </div>{' '}
       <div className="flex flex-col gap-2">
@@ -76,9 +83,12 @@ export function EnterpriseInfoStep() {
           {...form.register('enterpriseInfo.CNPJ')}
         />
         {form.formState.errors.enterpriseInfo?.CNPJ && (
-          <span className="text-red-500">
-            {form.formState.errors.enterpriseInfo?.CNPJ?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.enterpriseInfo?.CNPJ?.message}
+            </span>
+          </div>
         )}
       </div>{' '}
       <StepperFooter>

@@ -8,6 +8,7 @@ import { Label } from '../ui/label';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 import type { SignUpFormData } from '../SignUpCard';
+import { TriangleAlert } from 'lucide-react';
 
 export const accountInfoSchema = z.object({
   email: z.string().email({ message: 'Please, provide a valid email' }),
@@ -32,9 +33,12 @@ export function AccountInfoStep() {
           {...form.register('accountInfo.email')}
         />
         {form.formState.errors.accountInfo?.email && (
-          <span className="text-red-500">
-            {form.formState.errors.accountInfo?.email?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.accountInfo?.email?.message}
+            </span>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2">
@@ -48,9 +52,12 @@ export function AccountInfoStep() {
           {...form.register('accountInfo.password')}
         />
         {form.formState.errors.accountInfo?.password && (
-          <span className="text-red-500">
-            {form.formState.errors.accountInfo?.password?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.accountInfo?.password?.message}
+            </span>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2">
@@ -64,9 +71,12 @@ export function AccountInfoStep() {
           {...form.register('accountInfo.confirmPassword')}
         />
         {form.formState.errors.accountInfo?.confirmPassword && (
-          <span className="text-red-500">
-            {form.formState.errors.accountInfo?.confirmPassword?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.accountInfo?.confirmPassword?.message}
+            </span>
+          </div>
         )}
       </div>
       <StepperFooter>

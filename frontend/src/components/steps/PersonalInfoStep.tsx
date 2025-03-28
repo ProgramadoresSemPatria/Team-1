@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import type { SignUpFormData } from '../SignUpCard';
-
+import { TriangleAlert } from 'lucide-react';
 export const personalInfoSchema = z.object({
   name: z.string().min(1, { message: 'Please, provide your name' }),
   CPF: z.string().min(1, { message: 'Please, provide a valid CPF' }),
@@ -36,9 +36,12 @@ export function PersonalInfoStep() {
           {...form.register('personalInfo.name')}
         />
         {form.formState.errors.personalInfo?.name && (
-          <span className="text-red-500">
-            {form.formState.errors.personalInfo?.name?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.personalInfo?.name?.message}
+            </span>
+          </div>
         )}
       </div>{' '}
       <div className="flex flex-col gap-2">
@@ -53,9 +56,12 @@ export function PersonalInfoStep() {
           {...form.register('personalInfo.CPF')}
         />
         {form.formState.errors.personalInfo?.CPF && (
-          <span className="text-red-500">
-            {form.formState.errors.personalInfo?.CPF?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.personalInfo?.CPF?.message}
+            </span>
+          </div>
         )}
       </div>{' '}
       <div className="flex flex-col gap-2">
@@ -69,9 +75,12 @@ export function PersonalInfoStep() {
           {...form.register('personalInfo.birthdate')}
         />
         {form.formState.errors.personalInfo?.birthdate && (
-          <span className="text-red-500">
-            {form.formState.errors.personalInfo?.birthdate?.message}
-          </span>
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
+              {form.formState.errors.personalInfo?.birthdate?.message}
+            </span>
+          </div>
         )}
       </div>
       <StepperFooter>

@@ -21,71 +21,76 @@ export const accountInfoSchema = z.object({
 export function AccountInfoStep() {
   const form = useFormContext<SignUpFormData>();
   return (
-    <>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="email" className="font-bold">
-          Enter your Email
+    <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label htmlFor="email" className="font-bold text-xl lg:text-2xl">
+          Email
         </Label>
         <Input
           type="email"
-          className="border px-1"
+          className="border px-2 h-10 lg:h-12"
           placeholder="youremail@email.com"
           {...form.register('accountInfo.email')}
         />
         {form.formState.errors.accountInfo?.email && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.accountInfo?.email?.message}
             </span>
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="password" className="font-bold">
-          Enter your password
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label htmlFor="password" className="font-bold text-xl lg:text-2xl">
+          Password
         </Label>
         <Input
           type="password"
-          className="border"
+          className="border px-2 h-10 lg:h-12"
           placeholder="••••••••"
           {...form.register('accountInfo.password')}
         />
         {form.formState.errors.accountInfo?.password && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.accountInfo?.password?.message}
             </span>
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="confirmPassword" className="font-bold">
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label
+          htmlFor="confirmPassword"
+          className="font-bold text-xl lg:text-2xl"
+        >
           Confirm password
         </Label>
         <Input
           type="password"
-          className="border px-1"
+          className="border px-2 h-10 lg:h-12"
           placeholder="••••••••"
           {...form.register('accountInfo.confirmPassword')}
         />
         {form.formState.errors.accountInfo?.confirmPassword && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.accountInfo?.confirmPassword?.message}
             </span>
           </div>
         )}
       </div>
       <StepperFooter>
-        <StepperPreviousButton />
+        <StepperPreviousButton variant="outline" />
         <StepperNextButton
           disabled={form.formState.isSubmitting}
           type="submit"
+          size="lg"
+          text="Create account"
         />
       </StepperFooter>
-    </>
+    </div>
   );
 }

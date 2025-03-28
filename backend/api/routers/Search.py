@@ -51,16 +51,8 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
 
 @router.get('/input/group/')
 def results_by_day(session: session_dependency):
-    statement = (
-        select(
-            func.strftime('%Y-%m-%d %H:%M:%S', AiResponse.consulted_query_date),
-            AiResponse.sentiment_prediction,
-            func.count(AiResponse.id)
-        )
-        .group_by(func.strftime('%Y-%m-%d %H:%M:%S', AiResponse.consulted_query_date), AiResponse.sentiment_prediction)
-    )
-
-    results = session.exec(statement).all()
+    statment = "SELECT strftime('%Y-%m-%d %H:%M:%S', consulted_query_date), sentiment_prediction, count(*) FROM airesponse GROUP BY sentiment_prediction, consulted_query_date"
+    results = session.execute(text(statment)).all()
     to_return = [
         {"date": result[0], "sentiment": result[1], "count": result[2]}
         for result in results

@@ -14,6 +14,7 @@ from ml_model.preprocess import clear_text
 from ..db import get_session
 from ..db.AIResponse import AiResponse
 from api.utils.operators import convert_text_to_operator
+from api.utils.query_helper import build_where_clause
 
 
 router = APIRouter(
@@ -74,27 +75,17 @@ def filter_inputted(
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
     items_per_page:Annotated[int, Query(le=100)] = 10, 
     page:Annotated[int, Query()] = 1):
-    if date and not date_operator :
-        return {"message": "Please provide operator for filter data - [gte, gt, e, lt, lte]"}
-    if date_operator and not date:
-        return {"message": "Using date operator, you must provide a date"}
-        
-    where_date = None
-    where_sentiment = None
+    if (date and not date_operator) or (date_operator and not date) :
+        return {"message": "Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]"}
 
-    if date:
-        where_date = f"consulted_query_date {convert_text_to_operator(date_operator.value)} '{date}'"
+    filters = {}
+    if date and date_operator:
+        filters["consulted_query_date"] = {"operator": date_operator.value, "value": date}
     if sentiment:
-        where_sentiment = f"sentiment_prediction = '{sentiment}'"
+        filters["sentiment_prediction"] = sentiment
 
-
-    where_clause_parts = []
-    if where_date:
-        where_clause_parts.append(where_date)
-    if where_sentiment:
-        where_clause_parts.append(where_sentiment)
-
-    where_clause = "WHERE " + " AND ".join(where_clause_parts) if where_clause_parts else ""
+    where_clause = build_where_clause(**filters)
+    
     statment = f"SELECT * FROM airesponse {where_clause if where_clause else ""}"
 
     try:

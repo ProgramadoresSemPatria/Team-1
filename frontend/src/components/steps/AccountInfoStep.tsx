@@ -5,12 +5,11 @@ import {
 } from '../Stepper';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
+import type { SignUpFormData } from '../SignUpCard';
 
-const schema = z.object({
+export const accountInfoSchema = z.object({
   email: z.string().email({ message: 'Please, provide a valid email' }),
   password: z.string().min(1, { message: 'Please, provide a valid password' }),
   confirmPassword: z
@@ -19,74 +18,64 @@ const schema = z.object({
 });
 
 export function AccountInfoStep() {
-  const navigate = useNavigate();
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-  });
-
-  const handleSubmit = form.handleSubmit(async (formData) => {
-    console.log(formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    navigate('/login');
-  });
-
+  const form = useFormContext<SignUpFormData>();
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="email" className="font-bold">
-            Enter your Email
-          </Label>
-          <Input
-            type="email"
-            className="border px-1"
-            placeholder="youremail@email.com"
-            {...form.register('email')}
-          />
-          {form.formState.errors.email && (
-            <span className="text-red-500">
-              {form.formState.errors.email?.message}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="password" className="font-bold">
-            Enter your password
-          </Label>
-          <Input
-            type="password"
-            className="border"
-            placeholder="••••••••"
-            {...form.register('password')}
-          />
-          {form.formState.errors.password && (
-            <span className="text-red-500">
-              {form.formState.errors.password?.message}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="confirmPassword" className="font-bold">
-            Confirm password
-          </Label>
-          <Input
-            type="password"
-            className="border px-1"
-            placeholder="••••••••"
-            {...form.register('confirmPassword')}
-          />
-          {form.formState.errors.confirmPassword && (
-            <span className="text-red-500">
-              {form.formState.errors.confirmPassword?.message}
-            </span>
-          )}
-        </div>
-        <StepperFooter>
-          <StepperPreviousButton />
-          <StepperNextButton />
-        </StepperFooter>
-      </form>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="email" className="font-bold">
+          Enter your Email
+        </Label>
+        <Input
+          type="email"
+          className="border px-1"
+          placeholder="youremail@email.com"
+          {...form.register('accountInfo.email')}
+        />
+        {form.formState.errors.accountInfo?.email && (
+          <span className="text-red-500">
+            {form.formState.errors.accountInfo?.email?.message}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="password" className="font-bold">
+          Enter your password
+        </Label>
+        <Input
+          type="password"
+          className="border"
+          placeholder="••••••••"
+          {...form.register('accountInfo.password')}
+        />
+        {form.formState.errors.accountInfo?.password && (
+          <span className="text-red-500">
+            {form.formState.errors.accountInfo?.password?.message}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="confirmPassword" className="font-bold">
+          Confirm password
+        </Label>
+        <Input
+          type="password"
+          className="border px-1"
+          placeholder="••••••••"
+          {...form.register('accountInfo.confirmPassword')}
+        />
+        {form.formState.errors.accountInfo?.confirmPassword && (
+          <span className="text-red-500">
+            {form.formState.errors.accountInfo?.confirmPassword?.message}
+          </span>
+        )}
+      </div>
+      <StepperFooter>
+        <StepperPreviousButton />
+        <StepperNextButton
+          disabled={form.formState.isSubmitting}
+          type="submit"
+        />
+      </StepperFooter>
     </>
   );
 }

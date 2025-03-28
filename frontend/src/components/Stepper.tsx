@@ -3,8 +3,8 @@ import { createContext, useCallback, useContext, useState } from 'react';
 import { Button } from './ui/button';
 
 interface IStepperContext {
-  handlePreviousStep: () => void;
-  handleNextStep: () => void;
+  previousStep: () => void;
+  nextStep: () => void;
 }
 
 export const StepperContext = createContext({} as IStepperContext);
@@ -24,16 +24,16 @@ interface IStepperProps {
 export function Stepper({ steps, initialStep = 0 }: IStepperProps) {
   const [currentStep, setCurrentStep] = useState(initialStep);
 
-  const handlePreviousStep = useCallback(() => {
+  const previousStep = useCallback(() => {
     setCurrentStep((prev) => Math.max(0, prev - 1));
   }, []);
 
-  const handleNextStep = useCallback(() => {
+  const nextStep = useCallback(() => {
     setCurrentStep((prev) => Math.min(steps.length - 1, prev + 1));
   }, [steps]);
 
   return (
-    <StepperContext.Provider value={{ handlePreviousStep, handleNextStep }}>
+    <StepperContext.Provider value={{ previousStep, nextStep }}>
       <div className="flex flex-col items-center justify-center gap-10">
         <ul className="flex items-center justify-center gap-20">
           {steps.map((step, index) => (
@@ -70,14 +70,9 @@ export function StepperNextButton({
   onClick,
   ...props
 }: React.ComponentPropsWithoutRef<typeof Button>) {
-  const { handleNextStep } = useStepper();
+  const { nextStep } = useStepper();
   return (
-    <Button
-      type={type}
-      size={size}
-      onClick={onClick ?? handleNextStep}
-      {...props}
-    >
+    <Button type={type} size={size} onClick={onClick ?? nextStep} {...props}>
       Next
     </Button>
   );
@@ -89,12 +84,12 @@ export function StepperPreviousButton({
   onClick,
   ...props
 }: React.ComponentPropsWithoutRef<typeof Button>) {
-  const { handlePreviousStep } = useStepper();
+  const { previousStep } = useStepper();
   return (
     <Button
       type={type}
       size={size}
-      onClick={onClick ?? handlePreviousStep}
+      onClick={onClick ?? previousStep}
       {...props}
     >
       Previous

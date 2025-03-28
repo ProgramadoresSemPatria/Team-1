@@ -11,6 +11,16 @@ from collections import Counter
 import unicodedata 
 
 
+
+
+corrections = {
+    "loove": "love",
+    "loveed": "loved",
+    "soo": "so",
+    "okaay": "okay",
+    "wwbuythiscom": "buy",
+    "idk": "i dont know"
+}
 stop_words = set(stopwords.words('english'))
 
 def clear_text(text):

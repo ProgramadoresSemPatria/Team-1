@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, Body, Depends, Query
 from typing import Annotated
 import pandas as pd
-from sqlmodel import Session, select
+from sqlmodel import Session, select, text
 from sqlalchemy import func
 from pydantic import BaseModel
 from datetime import datetime
@@ -66,3 +66,8 @@ def results_by_day(session: session_dependency):
         for result in results
     ]
     return to_return
+
+@router.get('/input/distinct_date')
+def distinct_inputted_date(session: session_dependency):
+    result = session.execute(text("SELECT DISTINCT consulted_query_date FROM airesponse"))
+    return [{"inputted_date": i[0]} for i in result.all()]

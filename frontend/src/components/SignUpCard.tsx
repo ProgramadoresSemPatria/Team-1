@@ -1,10 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Stepper } from './Stepper';
-import { AccountInfoStep } from './steps/AccountInfoStep';
-import { EnterpriseInfoStep } from './steps/EnterpriseInfoStep';
-import { PersonalInfoStep } from './steps/PersonalInfoStep';
+import { accountInfoSchema, AccountInfoStep } from './steps/AccountInfoStep';
+import {
+  enterpriseInfoSchema,
+  EnterpriseInfoStep,
+} from './steps/EnterpriseInfoStep';
+import { personalInfoSchema, PersonalInfoStep } from './steps/PersonalInfoStep';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+const schema = z.object({
+  personalInfo: personalInfoSchema,
+  enterpriseInfo: enterpriseInfoSchema,
+  accountInfo: accountInfoSchema,
+});
 
+export type SignUpFormData = z.infer<typeof schema>;
 export function SignUpCard() {
+  const navigate = useNavigate();
+  const form = useForm<SignUpFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      personalInfo: {
+        name: '',
+        CPF: '',
+        birthdate: '',
+      },
+      enterpriseInfo: {
+        CNPJ: '',
+        enterpriseName: '',
+        businessType: '',
+      },
+      accountInfo: {
+        email: '',
+        password: '',
+        confirmPassword: '',
+      },
+    },
+  });
+
+  const handleSubmit = form.handleSubmit((data) => {
+    console.log(data);
+    navigate('/login');
+    //TODO: API Call
+  });
+
   return (
     <div className="flex flex-col items-center justify-center md:px-10">
       <Card className="md:w-[80vh]">
@@ -14,23 +55,27 @@ export function SignUpCard() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Stepper
-            steps={[
-              {
-                label: 'Personal Information',
-                content: <PersonalInfoStep />,
-              },
-              {
-                label: 'Enterprise Information',
-                content: <EnterpriseInfoStep />,
-              },
+          <FormProvider {...form}>
+            <form onSubmit={handleSubmit}>
+              <Stepper
+                steps={[
+                  {
+                    label: 'Personal Information',
+                    content: <PersonalInfoStep />,
+                  },
+                  {
+                    label: 'Enterprise Information',
+                    content: <EnterpriseInfoStep />,
+                  },
 
-              {
-                label: 'Account Information',
-                content: <AccountInfoStep />,
-              },
-            ]}
-          />
+                  {
+                    label: 'Account Information',
+                    content: <AccountInfoStep />,
+                  },
+                ]}
+              />
+            </form>
+          </FormProvider>
         </CardContent>
       </Card>
     </div>

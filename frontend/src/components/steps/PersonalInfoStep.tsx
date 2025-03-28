@@ -23,68 +23,69 @@ export function PersonalInfoStep() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="name" className="font-bold">
+    <div className="flex flex-col items-start justify-start gap-4">
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label htmlFor="name" className="font-bold text-xl lg:text-2xl">
           Name
         </Label>
         <Input
           id="name"
           type="text"
-          className="border px-1"
+          className="px-2 h-10 lg:h-12"
           placeholder="Your name"
+          
           {...form.register('personalInfo.name')}
         />
         {form.formState.errors.personalInfo?.name && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.personalInfo?.name?.message}
             </span>
           </div>
         )}
       </div>{' '}
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="CPF" className="font-bold">
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label htmlFor="CPF" className="font-bold text-xl lg:text-2xl">
           CPF
         </Label>
         <Input
           id="CPF"
           type="text"
-          className="border px-1"
+          className="px-2 h-10 lg:h-12"
           placeholder="000.000.000-00"
           {...form.register('personalInfo.CPF')}
         />
         {form.formState.errors.personalInfo?.CPF && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.personalInfo?.CPF?.message}
             </span>
           </div>
         )}
       </div>{' '}
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="birthdate" className="font-bold">
+      <div className="flex flex-col gap-2 w-[42vh]">
+        <Label htmlFor="birthdate" className="font-bold text-xl lg:text-2xl">
           Birthdate
         </Label>
         <Input
           id="birthdate"
           type="date"
-          className="border px-1"
+          className="border px-2 h-10 lg:h-12"
           {...form.register('personalInfo.birthdate')}
         />
         {form.formState.errors.personalInfo?.birthdate && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500" />
-            <span className="text-red-500">
+            <TriangleAlert className="text-red-500 lg:text-2xl" />
+            <span className="text-red-500 lg:text-2xl">
               {form.formState.errors.personalInfo?.birthdate?.message}
             </span>
           </div>
         )}
       </div>
       <StepperFooter>
-        <StepperNextButton onClick={handleNextStep} />
+        <StepperNextButton onClick={handleNextStep} size="lg" />
       </StepperFooter>
     </div>
   );

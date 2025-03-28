@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body, Path, HTTPException
 from typing import Annotated
 
 from sqlmodel import Session
 
-from ..db.Users import CreateUser, Users, BaseUser
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 
@@ -25,3 +25,18 @@ def create_user(user: CreateUser, session: session_dependency):
     session.commit()
     session.refresh(user_to_db)
     return user_to_db
+
+@router.patch('/{user_id}')
+def update_user(user_id:Annotated[int, Path()], user:Annotated[UpdateUser, Body()], session: session_dependency) -> BaseUser:
+    user_db = session.get(Users, user_id)
+    if not (user_db) :
+        raise HTTPException(status_code=404, detail="User not founded")
+    
+    user_body = user.model_dump(exclude_unset=True)
+    user_db.sqlmodel_update(user_body)
+
+    session.add(user_db)
+    session.commit()
+    session.refresh(user_db)
+
+    return user_db

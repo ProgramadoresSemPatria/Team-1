@@ -33,7 +33,7 @@ def decode_token(token:str):
     return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
 
 def protected_endpoint(Authorization: Annotated[str, Header()]):
-    token = Authorization.removeprefix("Bearer ")
+    token = Authorization.removeprefix("bearer ").removeprefix("Bearer ")
     try :
         decode_token(token=token)
     except :

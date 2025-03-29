@@ -2,15 +2,20 @@ import { Link } from "react-router-dom";
 import Logo from "@/assets/FeedAI_Logo.png";
 import { Button } from "@/components/ui/button";
 import { UserNav } from "@/components/UserNav";
+import useAuthContext from "@/hooks/useAuth";
 
 export function Header() {
-	const isLogged = true;
+	const { isLogged } = useAuthContext();
+
 	return (
 		<header className="py-6 flex justify-between items-center px-20 bg-white/80 backdrop-blur-md z-50 border-b">
-			<div className="flex flex-row gap-4 items-center">
-				<img src={Logo} alt="logo" className="w-20 h-20" />
-				<span className="font-bold text-4xl">FeedAI</span>
-			</div>
+
+			<Link to={isLogged ? "/upload" : "/"}>
+				<div className="flex flex-row gap-4 items-center">
+					<img src={Logo} alt="logo" className="w-20 h-20" />
+					<span className="font-bold text-4xl">FeedAI</span>
+				</div>
+			</Link>
 			{isLogged ? (
 				<UserNav />
 			) : (

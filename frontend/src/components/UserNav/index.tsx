@@ -1,5 +1,3 @@
-"use client";
-
 import { LogOut, User } from "lucide-react";
 
 import {

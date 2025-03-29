@@ -11,7 +11,7 @@ export function BenefitCard({
   description,
 }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <Card className="p-6 md:w-80 md:h-96">
+    <Card className="p-6 transition-all hover:shadow-md mx-10 hover:border-sky-700 lg:w-80 lg:h-72">
       <CardHeader>
         <div className="flex flex-col items-center justify-center gap-2">
           {icon}
@@ -19,7 +19,7 @@ export function BenefitCard({
             <h3 className="text-xl font-bold md:text-2xl">{title}</h3>
           </CardTitle>
         </div>
-        <CardDescription className="text-sm md:text-lg">
+        <CardDescription className="text-sm md:text-lg text-center">
           {description}
         </CardDescription>
       </CardHeader>

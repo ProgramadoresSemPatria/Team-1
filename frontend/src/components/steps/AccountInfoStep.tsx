@@ -85,10 +85,11 @@ export function AccountInfoStep() {
       <StepperFooter>
         <StepperPreviousButton variant="outline" />
         <StepperNextButton
+        
           disabled={form.formState.isSubmitting}
           type="submit"
           size="lg"
-          text="Create account"
+          text={form.formState.isSubmitting ? "Creating account..." : "Create account"}
         />
       </StepperFooter>
     </div>

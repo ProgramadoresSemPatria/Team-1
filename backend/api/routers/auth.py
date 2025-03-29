@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException, Body
+from fastapi import Depends, APIRouter, HTTPException, Body, Response, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from typing import Annotated
@@ -56,3 +56,10 @@ async def login_user(user: Annotated[UserIn, Body()], session: session_dependenc
         else :
             raise HTTPException(status_code=404, detail="User or Password Incorrect")
     raise HTTPException(status_code=404, detail="User or Password Incorrect")
+
+@router.get('/me')
+def get_me(authorization:Annotated[str, Header()]):
+    try :
+        return {"message":"Success!", "token": decode_token(authorization)}
+    except Exception as e:
+        return {"message":"Failed!", "erro": str(e)}

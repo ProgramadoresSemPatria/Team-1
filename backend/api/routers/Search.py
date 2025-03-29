@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header
 from typing import Annotated, Union
 import pandas as pd
 from sqlmodel import Session, select, text
@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 import joblib
+import uuid
 
 from ..enum.TagsEnum import TagsEnum
 from ..enum.DateOperator import DateOperator
@@ -16,6 +17,7 @@ from ..db.AIResponse import AiResponse
 from ..db.AIResponseTags import AiResponseTags
 from api.utils.operators import convert_text_to_operator
 from api.utils.query_helper import build_where_clause
+from api.utils.token import decode_token
 
 
 router = APIRouter(
@@ -29,34 +31,43 @@ session_dependency = Annotated[Session, Depends(get_session)]
 
 
 @router.post('/input')
-async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency):
-    today = datetime.now()
-    df = pd.read_csv(file.file)
-
-    df['Text'] = df['Text'].apply(clear_text)
-
-    X = vectorizer.transform(df['Text'])
-    df['Sentiment_Prediction'] = model.predict(X)
-    df_table = df.copy()
-    result = df[['Text', 'Sentiment_Prediction']].iloc[:30, :].to_dict(orient='records')
-
-
-    df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
-    df_table["consulted_query_date"] = today
-    df_table_dict = df_table.to_dict(orient='records')
-    session.bulk_insert_mappings(AiResponse, df_table_dict)
-
-    dict_tag_prediction = {
-        "consulted_query_date" : today,
-        "tag" : file.filename.replace('.csv', '')
-    }
-    dict_to_db = AiResponseTags.model_validate(dict_tag_prediction)
-    session.add(dict_to_db)
-
+async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, authorization: Annotated[str, Header()]):
     try:
+        today = datetime.now()
+        df = pd.read_csv(file.file)
+
+        df['Text'] = df['Text'].apply(clear_text)
+
+        X = vectorizer.transform(df['Text'])
+        df['Sentiment_Prediction'] = model.predict(X)
+        df_table = df.copy()
+        result = df[['Text', 'Sentiment_Prediction']].iloc[:30, :].to_dict(orient='records')
+
+
+        df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
+        df_table["consulted_query_date"] = today
+
+        user = decode_token(authorization)
+        user_id = str(user.get("id"))
+
+        df_table["user_id"] = uuid.UUID(user_id)
+        df_table["key"] = df_table["user_id"].astype(str) + df_table["consulted_query_date"].astype(str)
+        df_table_dict = df_table.to_dict(orient='records')
+        session.bulk_insert_mappings(AiResponse, df_table_dict)
+
+        dict_tag_prediction = {
+            "consulted_query_date" : today,
+            "tag" : file.filename.replace('.csv', ''),
+            "user_id" : uuid.UUID(user_id),
+            "key" : f"{str(user_id)}{str(today)}"
+        }
+        dict_to_db = AiResponseTags.model_validate(dict_tag_prediction)
+        session.add(dict_to_db)
+
+    
         session.commit()
     except Exception as e :
-        return {"message":"Error", "erro": str(e._message)}
+        return {"message":"Error", "erro": str(e)}
     
     session.refresh(dict_to_db)
     return {"message": "success", "sample": result}

@@ -46,9 +46,9 @@ def auth(token: Annotated[str, Depends(o_auth_pass_bearer)]):
 
 @router.post('/login')
 async def login_user(user: Annotated[UserIn, Body()], session: session_dependency):
-    statement = select(Users).where(Users.email == user.email)
-    results = session.exec(statement)
-    for user_instance in results:
+    try :
+        statement = select(Users).where(Users.email == user.email)
+        user_instance = session.exec(statement).one()
         if(user_instance) :
             if not verify_password(user.password, user_instance.password) :
                 raise HTTPException(status_code=404, detail="User or Password Incorrect")
@@ -67,4 +67,6 @@ async def login_user(user: Annotated[UserIn, Body()], session: session_dependenc
                 "token_type": "bearer"}
         else :
             raise HTTPException(status_code=404, detail="User or Password Incorrect")
-    raise HTTPException(status_code=404, detail="User or Password Incorrect")
+        raise HTTPException(status_code=404, detail="User or Password Incorrect")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

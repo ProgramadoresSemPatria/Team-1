@@ -80,9 +80,13 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
     return {"message": "We are searching for feedbacks for you, please wait until finish!", "keywords": keywords}
 
 @router.get('/input/group/')
-def results_by_day(session: session_dependency):
-    statment = "SELECT tag, sentiment_prediction, count(*) FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date GROUP BY sentiment_prediction, tag"
+def results_by_day(session: session_dependency, authorization: Annotated[str, Header()]):
+    user = decode_token(authorization.removeprefix("bearer ").removeprefix("Bearer "))
+    user_id = str(user.get("id"))
+    statment = f"""SELECT tag, sentiment_prediction, count(*)  FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date WHERE airesponse.user_id = '{user_id.replace('-', '')}' GROUP BY sentiment_prediction, tag """
+
     results = session.execute(text(statment)).all()
+
     to_return = [
         {"tag": result[0], "sentiment": result[1], "count": result[2]}
         for result in results

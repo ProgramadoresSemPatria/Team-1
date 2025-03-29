@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, Body, Path, HTTPException
+from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header
 from typing import Annotated
 
 from sqlmodel import Session, select
 
-from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, PublicUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
+from api.utils.token import decode_token
+from .auth import o_auth_pass_bearer
 
 from ..utils.token import create_hash_password
 
@@ -53,10 +55,18 @@ def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
     session.commit()
     return {"message":"User deleted"}
 
-@router.get("/", response_model=list[RetrieveUser])
+@router.get("/", response_model=list[PublicUser])
 def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users
+
+
+@router.get('/me')
+def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    try :
+        return {"message":"Success!", "data": decode_token(token)}
+    except Exception as e:
+        return {"message":"Failed!", "erro": str(e)}
 
 @router.get("/{user_id}", response_model=RetrieveUser)
 def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):

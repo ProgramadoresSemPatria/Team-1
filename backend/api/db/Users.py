@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from pydantic import EmailStr, BaseModel
 
+import uuid
+
 class BaseUser(SQLModel):
     name: str = Field(index=True)
     username: str = Field(index=True)
@@ -11,7 +13,7 @@ class BaseUser(SQLModel):
     company_type: str
 
 class Users(BaseUser, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     password: str 
     
 
@@ -32,4 +34,7 @@ class UpdateUser(BaseUser):
     company_type: str | None = Field(default=None, )
 
 class RetrieveUser(BaseUser):
-    id: int
+    id: uuid.UUID
+
+class PublicUser(BaseModel):
+    username: str

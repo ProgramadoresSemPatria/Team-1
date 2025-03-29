@@ -30,10 +30,10 @@ def create_token(data:object):
     return jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_token(token:str):
-    return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    return jwt.decode(token.removeprefix("Bearer ").removeprefix("bearer "), key=SECRET_KEY, algorithms=[ALGORITHM])
 
 def protected_endpoint(Authorization: Annotated[str, Header()]):
-    token = Authorization.removeprefix("Bearer ")
+    token = Authorization.removeprefix("bearer ").removeprefix("Bearer ")
     try :
         decode_token(token=token)
     except :

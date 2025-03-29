@@ -46,7 +46,7 @@ async def login_user(user: Annotated[UserIn, Body()], session: session_dependenc
                     "cpf" : user_instance.cpf,
                     "name" : user_instance.name,
                     "company_name" : user_instance.company_name,
-                    "id" : user_instance.id,
+                    "id" : str(user_instance.id),
                     "email" : user_instance.email,
                     "cnpj" : user_instance.cnpj,
                     "company_type" : user_instance.company_type,

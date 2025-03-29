@@ -68,10 +68,10 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
 
 @router.get('/input/group/')
 def results_by_day(session: session_dependency):
-    statment = "SELECT strftime('%Y-%m-%d %H:%M:%S', consulted_query_date), sentiment_prediction, count(*) FROM airesponse GROUP BY sentiment_prediction, consulted_query_date"
+    statment = "SELECT tag, sentiment_prediction, count(*) FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date GROUP BY sentiment_prediction, tag"
     results = session.execute(text(statment)).all()
     to_return = [
-        {"date": result[0], "sentiment": result[1], "count": result[2]}
+        {"tag": result[0], "sentiment": result[1], "count": result[2]}
         for result in results
     ]
     return to_return

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, Path, HTTPException
+from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header
 from typing import Annotated
 
 from sqlmodel import Session, select
@@ -64,3 +64,10 @@ def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
     if not user_db :
         raise HTTPException(status_code=404, detail="User not founded")
     return user_db
+
+@router.get('/me')
+def get_me(authorization:Annotated[str, Header()]):
+    try :
+        return {"message":"Success!", "token": decode_token(authorization)}
+    except Exception as e:
+        return {"message":"Failed!", "erro": str(e)}

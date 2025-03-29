@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from .Users import BaseUser, CreateUser, Users
+from .AIResponse import AiResponse
+from .AIResponseTags import AiResponseTags
 
 DATABASE_URL = (
     f"postgresql://{os.getenv('POSTGRESQL_USERNAME')}:"

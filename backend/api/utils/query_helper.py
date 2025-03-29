@@ -11,7 +11,8 @@ def build_where_clause(**filters):
             if operator and val:
                 where_clause_parts.append(f"{column} {convert_text_to_operator(operator)} '{val}'")
         else:
-            where_clause_parts.append(f"{column} = '{value}'")
+            list_formatted = [f"'{i}'" for i in value ]
+            where_clause_parts.append(f"{column} IN ({",".join(list_formatted)})")
 
     where_clause = "WHERE " + " AND ".join(where_clause_parts) if where_clause_parts else ""
 

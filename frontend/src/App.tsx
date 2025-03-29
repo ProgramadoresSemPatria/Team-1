@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import ReactQueryProvider from "./services/query-client";
 import { CsvAnalyze } from "./pages/CsvAnalyze";
 import FixedLayout from "./layouts/FixedLayout";
+import { LandingPage } from "./pages/LandingPage";
 
 function App() {
 	return (
@@ -33,10 +34,11 @@ function App() {
 							<Route element={<AuthGuard isPrivate={false} />}>
 								<Route path="/login" element={<Login />} />
 								<Route path="/register" element={<Register />} />
+								<Route path="/" element={<LandingPage />} />
 							</Route>
 							<Route element={<AuthGuard isPrivate={true} />}>
 								<Route element={<FixedLayout />}>
-									<Route path="/" element={<div>oi</div>} />
+									<Route path="/dashboard" element={<div>oi</div>} />
 									<Route path="/upload" element={<Upload />} />
 									<Route path="/analytics" element={<CsvAnalyze />} />
 								</Route>

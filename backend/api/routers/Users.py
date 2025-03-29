@@ -3,7 +3,7 @@ from typing import Annotated
 
 from sqlmodel import Session, select
 
-from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, PublicUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 from api.utils.token import decode_token
@@ -54,7 +54,7 @@ def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
     session.commit()
     return {"message":"User deleted"}
 
-@router.get("/", response_model=list[RetrieveUser])
+@router.get("/", response_model=list[PublicUser])
 def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users

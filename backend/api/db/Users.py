@@ -35,3 +35,6 @@ class UpdateUser(BaseUser):
 
 class RetrieveUser(BaseUser):
     id: uuid.UUID
+
+class PublicUser(BaseModel):
+    username: str

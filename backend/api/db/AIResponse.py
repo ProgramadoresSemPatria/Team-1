@@ -2,9 +2,12 @@ from sqlmodel import SQLModel, Field
 from .AIResponseTags import AiResponseTags
 
 import datetime
+import uuid
 
 class AiResponse(SQLModel, table=True):
     id: int | None = Field(primary_key=True, default=None)
     text: str
     sentiment_prediction: str
-    consulted_query_date: datetime.datetime = Field(index=True, foreign_key="airesponsetags.consulted_query_date")
+    consulted_query_date: datetime.datetime = Field(index=True)
+    user_id: uuid.UUID
+    key:str|None = Field(default=None, foreign_key="airesponsetags.key")

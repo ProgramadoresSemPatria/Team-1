@@ -98,9 +98,14 @@ def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_
         return {"message": "erro", "erro": str(e)}
 
 @router.get('/input/distinct_tag')
-def distinct_tag(session: session_dependency):
-    result = session.execute(text("SELECT DISTINCT tag FROM AiResponseTags"))
-    return [i[0] for i in result.all()]
+def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    try :
+        user = decode_token(token)
+        user_id = str(user.get("id"))
+        result = session.execute(text(f"SELECT DISTINCT tag FROM AiResponseTags WHERE user_id='{user_id.replace('-', '')}'"))
+        return [i[0] for i in result.all()]
+    except Exception as e:
+        return {"message": "erro", "erro": str(e)}
 
 @router.post('/input/filter/')
 def filter_inputted(

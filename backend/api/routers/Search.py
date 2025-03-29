@@ -110,6 +110,7 @@ def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_au
 @router.post('/input/filter/')
 def filter_inputted(
     session: session_dependency, 
+    token: Annotated[str, Depends(o_auth_pass_bearer)],
     tags: Annotated[list[str] | None, Body()] = None,
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
     items_per_page:Annotated[int, Query(le=100)] = 10, 
@@ -117,6 +118,9 @@ def filter_inputted(
     date:Annotated[str | None, Query()] = None, 
     date_operator:Annotated[DateOperator | None, Query()] = None, 
     ):
+    user = decode_token(token)
+    user_id = str(user.get("id"))
+
     if (date and not date_operator) or (date_operator and not date) :
         return {"message": "Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]"}
 
@@ -128,6 +132,7 @@ def filter_inputted(
         filters["sentiment_prediction"] = [sentiment]
     if tags:
         filters['tag'] = tags
+    filters['airesponse.user_id'] = [user_id.replace('-', '')]
 
     where_clause = build_where_clause(**filters)
     

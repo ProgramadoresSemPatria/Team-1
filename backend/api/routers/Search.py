@@ -18,6 +18,7 @@ from ..db.AIResponseTags import AiResponseTags
 from api.utils.operators import convert_text_to_operator
 from api.utils.query_helper import build_where_clause
 from api.utils.token import decode_token
+from .auth import o_auth_pass_bearer
 
 
 router = APIRouter(
@@ -31,7 +32,7 @@ session_dependency = Annotated[Session, Depends(get_session)]
 
 
 @router.post('/input')
-async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, authorization: Annotated[str, Header()]):
+async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         today = datetime.now()
         df = pd.read_csv(file.file)
@@ -47,7 +48,7 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
         df_table["consulted_query_date"] = today
 
-        user = decode_token(authorization.removeprefix("bearer ").removeprefix("Bearer "))
+        user = decode_token(token)
         user_id = str(user.get("id"))
 
         df_table["user_id"] = uuid.UUID(user_id)
@@ -80,18 +81,21 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
     return {"message": "We are searching for feedbacks for you, please wait until finish!", "keywords": keywords}
 
 @router.get('/input/group/')
-def results_by_day(session: session_dependency, authorization: Annotated[str, Header()]):
-    user = decode_token(authorization.removeprefix("bearer ").removeprefix("Bearer "))
-    user_id = str(user.get("id"))
-    statment = f"""SELECT tag, sentiment_prediction, count(*)  FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date WHERE airesponse.user_id = '{user_id.replace('-', '')}' GROUP BY sentiment_prediction, tag """
+def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    try:
+        user = decode_token(token.removeprefix("bearer ").removeprefix("Bearer "))
+        user_id = str(user.get("id"))
+        statment = f"""SELECT tag, sentiment_prediction, count(*)  FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date WHERE airesponse.user_id = '{user_id.replace('-', '')}' GROUP BY sentiment_prediction, tag """
 
-    results = session.execute(text(statment)).all()
+        results = session.execute(text(statment)).all()
 
-    to_return = [
-        {"tag": result[0], "sentiment": result[1], "count": result[2]}
-        for result in results
-    ]
-    return to_return
+        to_return = [
+            {"tag": result[0], "sentiment": result[1], "count": result[2]}
+            for result in results
+        ]
+        return to_return
+    except Exception as e:
+        return {"message": "erro", "erro": str(e)}
 
 @router.get('/input/distinct_tag')
 def distinct_tag(session: session_dependency):

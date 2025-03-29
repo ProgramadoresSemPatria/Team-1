@@ -13,6 +13,7 @@ from ..enum.DateOperator import DateOperator
 from ml_model.preprocess import clear_text
 from ..db import get_session
 from ..db.AIResponse import AiResponse
+from ..db.AIResponseTags import AiResponseTags
 from api.utils.operators import convert_text_to_operator
 from api.utils.query_helper import build_where_clause
 
@@ -29,6 +30,7 @@ session_dependency = Annotated[Session, Depends(get_session)]
 
 @router.post('/input')
 async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency):
+    today = datetime.now()
     df = pd.read_csv(file.file)
 
     df['Text'] = df['Text'].apply(clear_text)
@@ -40,12 +42,24 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
 
 
     df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
-    df_table["consulted_query_date"] = datetime.now()
+    df_table["consulted_query_date"] = today
     df_table_dict = df_table.to_dict(orient='records')
     session.bulk_insert_mappings(AiResponse, df_table_dict)
-    session.commit()
 
-    return result
+    dict_tag_prediction = {
+        "consulted_query_date" : today,
+        "tag" : file.filename.replace('.csv', '')
+    }
+    dict_to_db = AiResponseTags.model_validate(dict_tag_prediction)
+    session.add(dict_to_db)
+
+    try:
+        session.commit()
+    except Exception as e :
+        return {"message":"Error", "erro": str(e._message)}
+    
+    session.refresh(dict_to_db)
+    return {"message": "success", "sample": result}
 
 @router.post('/find')
 async def find_feedback(keywords:Annotated[list[str], Body()]):

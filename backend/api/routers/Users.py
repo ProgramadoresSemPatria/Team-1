@@ -6,6 +6,7 @@ from sqlmodel import Session, select
 from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
+from api.utils.token import decode_token
 
 from ..utils.token import create_hash_password
 
@@ -58,16 +59,16 @@ def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users
 
+@router.get('/me')
+def get_me(authorization:Annotated[str, Header()]):
+    try :
+        return {"message":"Success!", "data": decode_token(authorization)}
+    except Exception as e:
+        return {"message":"Failed!", "erro": str(e)}
+
 @router.get("/{user_id}", response_model=RetrieveUser)
 def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
     user_db = session.get(Users, user_id)
     if not user_db :
         raise HTTPException(status_code=404, detail="User not founded")
     return user_db
-
-@router.get('/me')
-def get_me(authorization:Annotated[str, Header()]):
-    try :
-        return {"message":"Success!", "token": f"Bearer {decode_token(authorization)}"}
-    except Exception as e:
-        return {"message":"Failed!", "erro": str(e)}

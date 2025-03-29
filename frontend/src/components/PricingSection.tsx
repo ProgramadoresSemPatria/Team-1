@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { CardsMonthly } from './CardsMonthly';
-import { CardsYearly } from './CardsYearly';
+import { CardStandard } from './CardStandard';
+import { CardPro } from './CardPro';
 
 export function PricingSection() {
   return (
@@ -19,10 +19,16 @@ export function PricingSection() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="monthly">
-          <CardsMonthly />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20">
+            <CardStandard isYearly={false} />
+            <CardPro isYearly={false}/>
+          </div>
         </TabsContent>
         <TabsContent value="yearly">
-          <CardsYearly />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20">
+            <CardStandard isYearly={true} />
+            <CardPro isYearly={true} />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -21,12 +21,24 @@ session_dependency = Annotated[Session, Depends(get_session)] # Help on database
 
 @router.post('/login/swagger')
 def login_user_swagger(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
-    user_instance = session.get(Users, form_data.username)
+    statement = select(Users).where(Users.email == str(form_data.username).replace("\t",""))
+    user_instance = session.exec(statement).one()
     if not user_instance:
         raise HTTPException(status_code=404, detail="User or Password Incorrect")
     if not verify_password(form_data.password, user_instance.password):
         raise HTTPException(status_code=404, detail="User or Password Incorrect")
-    return {"access_token" : create_token({"sub": str(user_instance.username)}), "token_type": "bearer"}
+    token = create_token({
+                "username": user_instance.username, 
+                "cpf" : user_instance.cpf,
+                "name" : user_instance.name,
+                "company_name" : user_instance.company_name,
+                "id" : str(user_instance.id),
+                "email" : user_instance.email,
+                "cnpj" : user_instance.cnpj,
+                "company_type" : user_instance.company_type,
+                })
+    return {"access_token" : f"Bearer {token}", "token_type": "bearer"}
+        
 
 @router.get('/test-auth', dependencies=[Depends(o_auth_pass_bearer)])
 def auth(token: Annotated[str, Depends(o_auth_pass_bearer)]):

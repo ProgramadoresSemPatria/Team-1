@@ -81,34 +81,39 @@ def distinct_inputted_date(session: session_dependency):
     result = session.execute(text("SELECT DISTINCT consulted_query_date FROM airesponse"))
     return [{"inputted_date": i[0]} for i in result.all()]
 
-@router.get('/input/filter/')
+@router.post('/input/filter/')
 def filter_inputted(
     session: session_dependency, 
-    date:Annotated[str | None, Query()] = None, 
-    date_operator:Annotated[DateOperator | None, Query()] = None, 
+    tags: Annotated[list[str], Body()],
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
     items_per_page:Annotated[int, Query(le=100)] = 10, 
-    page:Annotated[int, Query()] = 1):
+    page:Annotated[int, Query()] = 1,
+    date:Annotated[str | None, Query()] = None, 
+    date_operator:Annotated[DateOperator | None, Query()] = None, 
+    ):
     if (date and not date_operator) or (date_operator and not date) :
         return {"message": "Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]"}
+
 
     filters = {}
     if date and date_operator:
         filters["consulted_query_date"] = {"operator": date_operator.value, "value": date}
     if sentiment:
-        filters["sentiment_prediction"] = sentiment
+        filters["sentiment_prediction"] = [sentiment]
+    if len(tags) > 0 :
+        filters['tag'] = tags
 
     where_clause = build_where_clause(**filters)
     
-    statment = f"SELECT * FROM airesponse {where_clause if where_clause else ""}"
+    statment = f"SELECT * FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date {where_clause if where_clause else ""}"
 
     try:
         results = session.execute(text(statment)).all()
         to_return = [
-        {"date": result[3], "sentiment": result[2], "text": result[1]}
+        {"date": result[3], "sentiment": result[2], "text": result[1], "tag" : result[4]}
         for result in results[(page-1)*items_per_page:items_per_page]
         ]
         return to_return
     except Exception as e:
         print(e)
-        return {"message" : "Failed to get data!", "erro" : str(e.message)}
+        return {"message" : "Failed to get data!", "erro" : str(e._message)}

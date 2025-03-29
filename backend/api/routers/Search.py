@@ -136,12 +136,12 @@ def filter_inputted(
 
     where_clause = build_where_clause(**filters)
     
-    statment = f"SELECT * FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date {where_clause if where_clause else ""}"
+    statment = f"SELECT airesponse.consulted_query_date, airesponse.sentiment_prediction, airesponse.text, airesponsetags.tag FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date {where_clause if where_clause else ""}"
 
     try:
         results = session.execute(text(statment)).all()
         to_return = [
-        {"date": result[3], "sentiment": result[2], "text": result[1], "tag" : result[4]}
+        {"date": result[0], "sentiment": result[1], "text": result[2], "tag" : result[3]}
         for result in results[(page-1)*items_per_page:page*items_per_page]
         ]
         return to_return

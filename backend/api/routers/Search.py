@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header, HTTPException
 from typing import Annotated, Union
 import pandas as pd
 from sqlmodel import Session, select, text
@@ -70,6 +70,8 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
     
         session.commit()
     except Exception as e :
+        if "UNIQUE constraint failed: airesponsetags.key" in str(e):
+            return {"message":"Error", "erro": "Tag/Document name already analyzed. Please choose another or rename it"} 
         return {"message":"Error", "erro": str(e)}
     
     session.refresh(dict_to_db)

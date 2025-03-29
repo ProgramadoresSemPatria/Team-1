@@ -7,6 +7,7 @@ from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, Pu
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 from api.utils.token import decode_token
+from .auth import o_auth_pass_bearer
 
 from ..utils.token import create_hash_password
 
@@ -59,10 +60,11 @@ def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users
 
+
 @router.get('/me')
-def get_me(authorization:Annotated[str, Header()]):
+def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
-        return {"message":"Success!", "data": decode_token(authorization)}
+        return {"message":"Success!", "data": decode_token(token)}
     except Exception as e:
         return {"message":"Failed!", "erro": str(e)}
 

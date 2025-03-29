@@ -47,19 +47,21 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)
         df_table["consulted_query_date"] = today
 
-        user = decode_token(authorization)
+        user = decode_token(authorization.removeprefix("bearer ").removeprefix("Bearer "))
         user_id = str(user.get("id"))
 
         df_table["user_id"] = uuid.UUID(user_id)
-        df_table["key"] = df_table["user_id"].astype(str) + df_table["consulted_query_date"].astype(str)
+        df_table["related_key"] = df_table["user_id"].astype(str) + df_table["consulted_query_date"].astype(str)
         df_table_dict = df_table.to_dict(orient='records')
         session.bulk_insert_mappings(AiResponse, df_table_dict)
 
+        filename = file.filename.replace('.csv', '')
         dict_tag_prediction = {
             "consulted_query_date" : today,
-            "tag" : file.filename.replace('.csv', ''),
+            "tag" : filename,
             "user_id" : uuid.UUID(user_id),
-            "key" : f"{str(user_id)}{str(today)}"
+            "related_key" : f"{str(user_id)}{str(today)}",
+            "key" : f"{str(user_id)}{str(filename)}"
         }
         dict_to_db = AiResponseTags.model_validate(dict_tag_prediction)
         session.add(dict_to_db)

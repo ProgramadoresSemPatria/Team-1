@@ -13,11 +13,11 @@ export function FaqAccordion({
     <Accordion
       type="single"
       collapsible
-      className="border rounded-md px-4 mx-4 md:px-8 md:mx-8"
+      className="border rounded-md px-4 md:px-8 w-9/10 lg:w-[100vh]"
     >
       <AccordionItem value="item-1">
         <AccordionTrigger>
-          <h3 className="text-lg font-bold text-gray-800 md:text-2xl">
+          <h3 className="text-lg font-bold text-gray-800 md:text-2xl text-left">
             {title}
           </h3>
         </AccordionTrigger>

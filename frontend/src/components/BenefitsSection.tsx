@@ -12,44 +12,45 @@ export function BenefitsSection() {
   return (
     <div className="flex flex-col gap-6 my-16">
       <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
-        Benefits of using our service
+        Benefits of using FeedAI
       </h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <p className="text-gray-500 text-xl mb-10 lg:text-2xl lg:mt-2">Save time and money while getting deeper insights into your customer feedback</p>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-20">
         <BenefitCard
           icon={
             <BrainCircuit className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />
           }
-          title="Best insights with AI"
-          description="Use the power of AI to get the best insights about your brand"
+          title="AI-Powered Insights"
+          description="Leverage advanced AI to extract meaningful patterns and insights from customer feedback"
         />
         <BenefitCard
           icon={<Clock className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />}
           title="Save Time"
-          description="With just a few clicks, you can get the latest reviews and feedback from your customers"
+          description="Get comprehensive analysis in seconds instead of weeks of manual review"
         />
         <BenefitCard
           icon={<DollarSign className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />}
           title="Save Money"
-          description="Instead of hiring a team of people to do it, we do it for you in seconds and for a fraction of the cost"
+          description="Reduce costs by automating the analysis process that would otherwise require a dedicated team"
         />
         <BenefitCard
           icon={<Users className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />}
           title="Connect with your customers"
-          description="We connect you with your customers and you can see what they are saying about your brand"
+          description="Understand customer needs and pain points to build stronger relationships"
         />
         <BenefitCard
           icon={
             <SquareCheckBig className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />
           }
-          title="Easy to Use and Understand"
-          description="Our platform is designed to be easy to use and understand"
+          title="Easy to Use"
+          description="Intuitive interface with clear visualizations and actionable recommendations"
         />
         <BenefitCard
           icon={
             <NotebookText className="w-8 h-8 text-sky-700 md:w-12 md:h-12" />
           }
-          title="Save your reviews"
-          description="We save your reviews and you can see them in one place"
+          title="Centralized Dashboard"
+          description="Access all your reviews and insights in one organized, searchable platform"
         />
       </div>
     </div>

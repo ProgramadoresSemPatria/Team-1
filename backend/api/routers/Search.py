@@ -84,7 +84,7 @@ def distinct_tag(session: session_dependency):
 @router.post('/input/filter/')
 def filter_inputted(
     session: session_dependency, 
-    tags: Annotated[list[str], Body()],
+    tags: Annotated[list[str] | None, Body()] = None,
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
     items_per_page:Annotated[int, Query(le=100)] = 10, 
     page:Annotated[int, Query()] = 1,
@@ -100,7 +100,7 @@ def filter_inputted(
         filters["consulted_query_date"] = {"operator": date_operator.value, "value": date}
     if sentiment:
         filters["sentiment_prediction"] = [sentiment]
-    if len(tags) > 0 :
+    if tags:
         filters['tag'] = tags
 
     where_clause = build_where_clause(**filters)

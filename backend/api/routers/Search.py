@@ -129,7 +129,7 @@ def filter_inputted(
 
     filters = {}
     if date and date_operator:
-        filters["consulted_query_date"] = {"operator": date_operator.value, "value": date}
+        filters["airesponse.consulted_query_date"] = {"operator": date_operator.value, "value": date}
     if sentiment:
         filters["sentiment_prediction"] = [sentiment]
     if tags:

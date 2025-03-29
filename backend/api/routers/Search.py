@@ -149,15 +149,18 @@ def filter_inputted(
         print(e)
         return {"message" : "Failed to get data!", "erro" : str(e._message)}
 
-@router.delete('/input/{tag}')
-def delete_response(session:session_dependency, tag:Annotated[str, Path()]):
+@router.delete('/input/delete/{tag}')
+def delete_response(session:session_dependency, tag:Annotated[str, Path()], token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
-        statment_airesponsetags = select(AiResponseTags).where(AiResponseTags.tag == tag)
-        result_airesponsetags = session.execute(statment_airesponsetags).one().tuple()[0]
-        tag_date = [value for (column, value) in result_airesponsetags if column=="consulted_query_date"][0]
+        user = decode_token(token)
+        user_id = user.get("id")
 
-        statment_airesponse = delete(AiResponse).where(AiResponse.consulted_query_date == tag_date)
-        statment_airesponsetags = delete(AiResponseTags).where(AiResponseTags.tag == tag)
+        statment_airesponsetags = select(AiResponseTags.related_key).where(AiResponseTags.tag == tag).where(AiResponseTags.user_id == uuid.UUID(user_id))
+
+        related_key = session.execute(statment_airesponsetags).one()[0]
+
+        statment_airesponse = delete(AiResponse).where(AiResponse.related_key == related_key)
+        statment_airesponsetags = delete(AiResponseTags).where(AiResponseTags.related_key == related_key)
         session.execute(statment_airesponse)
         session.execute(statment_airesponsetags)
         

@@ -68,6 +68,6 @@ def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
 @router.get('/me')
 def get_me(authorization:Annotated[str, Header()]):
     try :
-        return {"message":"Success!", "token": decode_token(authorization)}
+        return {"message":"Success!", "token": f"Bearer {decode_token(authorization)}"}
     except Exception as e:
         return {"message":"Failed!", "erro": str(e)}

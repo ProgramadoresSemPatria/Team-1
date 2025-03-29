@@ -76,10 +76,10 @@ def results_by_day(session: session_dependency):
     ]
     return to_return
 
-@router.get('/input/distinct_date')
-def distinct_inputted_date(session: session_dependency):
-    result = session.execute(text("SELECT DISTINCT consulted_query_date FROM airesponse"))
-    return [{"inputted_date": i[0]} for i in result.all()]
+@router.get('/input/distinct_tag')
+def distinct_tag(session: session_dependency):
+    result = session.execute(text("SELECT DISTINCT tag FROM AiResponseTags"))
+    return [i[0] for i in result.all()]
 
 @router.post('/input/filter/')
 def filter_inputted(

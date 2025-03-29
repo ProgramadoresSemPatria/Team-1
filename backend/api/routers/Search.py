@@ -111,7 +111,7 @@ def filter_inputted(
         results = session.execute(text(statment)).all()
         to_return = [
         {"date": result[3], "sentiment": result[2], "text": result[1], "tag" : result[4]}
-        for result in results[(page-1)*items_per_page:items_per_page]
+        for result in results[(page-1)*items_per_page:page*items_per_page]
         ]
         return to_return
     except Exception as e:

@@ -118,3 +118,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+.border-gradient-outer::before,
+.border-gradient-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #3b82f6 20%, #9333ea 80%);
+  z-index: -1;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.border-gradient-outer::before {
+  padding: 15px;
+}
+
+.border-gradient-inner::before {
+  padding: 30px;
+}

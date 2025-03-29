@@ -8,6 +8,8 @@ import { TriangleAlert } from 'lucide-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import useAuthContext from '@/hooks/useAuth';
+import Spinner from './Spinner';
 
 export function SignInCard() {
   const loginFormSchema = z.object({
@@ -25,8 +27,10 @@ export function SignInCard() {
     resolver: zodResolver(loginFormSchema),
   });
 
-  function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    console.log(values);
+  const { login, isLoginLoading } = useAuthContext();
+
+  async function onSubmit ({email, password}: z.infer<typeof loginFormSchema>) {
+    await login({email, password});
   }
 
   return (
@@ -81,7 +85,7 @@ export function SignInCard() {
               type="submit"
               className="text-center bg-sky-600 rounded-lg p-6 font-bold text-xl mt-5 mb-3 w-full hover:cursor-pointer hover:bg-sky-700 md:text-2xl"
             >
-              Sign in
+             {isLoginLoading ? <Spinner>Signing in...</Spinner> : "Sign in"}
             </Button>
             <CardFooter>
               <p className="text-lg md:text-xl md:mt-4">

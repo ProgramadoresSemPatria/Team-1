@@ -1,8 +1,8 @@
-from fastapi import APIRouter, File, UploadFile, Body, Depends, Query
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path
 from typing import Annotated, Union
 import pandas as pd
 from sqlmodel import Session, select, text
-from sqlalchemy import func
+from sqlalchemy import func, delete
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -117,3 +117,21 @@ def filter_inputted(
     except Exception as e:
         print(e)
         return {"message" : "Failed to get data!", "erro" : str(e._message)}
+
+@router.delete('/input/{tag}')
+def delete_response(session:session_dependency, tag:Annotated[str, Path()]):
+    try :
+        statment_airesponsetags = select(AiResponseTags).where(AiResponseTags.tag == tag)
+        result_airesponsetags = session.execute(statment_airesponsetags).one().tuple()[0]
+        tag_date = [value for (column, value) in result_airesponsetags if column=="consulted_query_date"][0]
+
+        statment_airesponse = delete(AiResponse).where(AiResponse.consulted_query_date == tag_date)
+        statment_airesponsetags = delete(AiResponseTags).where(AiResponseTags.tag == tag)
+        session.execute(statment_airesponse)
+        session.execute(statment_airesponsetags)
+        
+        session.commit()
+    
+    except Exception as e:
+        return {"message": "Failed to delete", "erro": str(e)}
+    return {"message": f"Input successfully deleted: {tag}"}

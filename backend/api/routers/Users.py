@@ -32,20 +32,20 @@ def create_user(user: CreateUser, session: session_dependency):
     return user_to_db
 
 
-@router.patch('/admin/{user_id}')
+@router.patch('/admin/{user_id}', status_code=status.HTTP_200_OK)
 def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, Body()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         user_accessing = decode_token(token)
         is_user_admin = user_accessing.get('is_admin')
         if not (is_user_admin) :
-            raise HTTPException(400, detail="You are not allow to do it")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
         
         user_db = session.get(Users, UUID(user_id))
         if not (user_db) :
-            raise HTTPException(status_code=404, detail="User not founded")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not founded")
 
         if user_db.email == "admin@admin.com":
-            raise HTTPException(status_code=400, detail="Admin user is immutable")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin user is immutable")
 
         if user.password :
             user.password = create_hash_password(user.password)
@@ -58,7 +58,7 @@ def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, 
 
         return user_db
     except Exception as e :
-        return str(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.delete('/admin/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id:Annotated[str, Path()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]) :

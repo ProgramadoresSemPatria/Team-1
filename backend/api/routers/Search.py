@@ -151,7 +151,7 @@ def filter_inputted(
         print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.delete('/input/delete/{tag}', status_code=status.HTTP_200_OK)
+@router.delete('/input/delete/{tag}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_response(session:session_dependency, tag:Annotated[str, Path()], token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         user = decode_token(token)
@@ -170,4 +170,3 @@ def delete_response(session:session_dependency, tag:Annotated[str, Path()], toke
     
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    return {"message": f"Input successfully deleted: {tag}"}

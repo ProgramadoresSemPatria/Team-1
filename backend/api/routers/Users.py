@@ -92,6 +92,17 @@ def retrieve_all_users_admin(session: session_dependency, token: Annotated[str, 
     users = session.exec(select(Users)).all()
     return users
 
+@router.get("/admin/{user_id}", status_code=status.HTTP_200_OK)
+def retrieve_user(user_id:Annotated[str, Path()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
+
+    user_db = session.get(Users, UUID(user_id))
+    if not user_db :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not founded")
+    return user_db
 
 @router.get('/me', status_code=status.HTTP_200_OK)
 def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):
@@ -100,9 +111,3 @@ def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.get("/{user_id}", response_model=RetrieveUser)
-def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):
-    user_db = session.get(Users, user_id)
-    if not user_db :
-        raise HTTPException(status_code=404, detail="User not founded")
-    return user_db

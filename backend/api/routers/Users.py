@@ -10,6 +10,7 @@ from ..enum.TagsEnum import TagsEnum
 from api.utils.token import decode_token
 from .auth import o_auth_pass_bearer
 from ..utils.token import create_hash_password
+from api.utils.response_helper import unique_constraint_message
 
 router = APIRouter(
     prefix="/users",
@@ -29,6 +30,10 @@ def create_user(user: CreateUser, session: session_dependency):
         session.refresh(user_to_db)
         return user_to_db
     except Exception as e :
+        string_error = str(e)
+        unique_string_pos = string_error.lower().find("unique constraint failed")
+        if (unique_string_pos != -1) :
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=unique_constraint_message(e))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 

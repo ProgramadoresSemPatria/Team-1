@@ -10,4 +10,4 @@ class AiResponse(SQLModel, table=True):
     sentiment_prediction: str
     consulted_query_date: datetime.datetime = Field(index=True)
     user_id: uuid.UUID
-    related_key:str|None = Field(default=None, foreign_key="airesponsetags.related_key")
+    related_key:str|None = Field(default=None)

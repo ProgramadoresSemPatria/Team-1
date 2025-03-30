@@ -83,6 +83,15 @@ def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users
 
+@router.get("/admin/")
+def retrieve_all_users_admin(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(400, detail="You are not allow to do it")
+    users = session.exec(select(Users)).all()
+    return users
+
 
 @router.get('/me')
 def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):

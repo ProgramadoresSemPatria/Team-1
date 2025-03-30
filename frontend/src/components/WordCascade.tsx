@@ -32,14 +32,16 @@ export function WordCascade({
   }, [words, duration]);
 
   return (
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={words[index]}
-          className={cn(className)}
-          {...framerProps}
-        >
-          {words[index]}
-        </motion.span>
-      </AnimatePresence>
+    <AnimatePresence mode="wait">
+      <motion.span
+        key={words[index]}
+        className={cn(className)}
+        {...framerProps}
+      >
+        {words[index]}
+      </motion.span>
+    </AnimatePresence>
   );
 }
+
+// Esse arquivo teve auxílio de IA

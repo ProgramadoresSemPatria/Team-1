@@ -60,23 +60,22 @@ def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, 
     except Exception as e :
         return str(e)
 
-@router.delete('/admin/{user_id}')
+@router.delete('/admin/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id:Annotated[str, Path()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]) :
     user_accessing = decode_token(token)
     is_user_admin = user_accessing.get('is_admin')
     if not (is_user_admin) :
-        raise HTTPException(400, detail="You are not allow to do it")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
     
     user_db = session.get(Users, UUID(user_id))
     if not (user_db) :
-        raise HTTPException(status_code=404, detail="User not founded")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not founded")
 
     if user_db.email == "admin@admin.com":
-            raise HTTPException(status_code=400, detail="Admin user is immutable")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin user is immutable")
 
     session.delete(user_db)
     session.commit()
-    return {"message":"User deleted"}
 
 @router.get("/", response_model=list[PublicUser], status_code=status.HTTP_200_OK)
 def retrieve_all_users(session: session_dependency):

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header, HTTPException
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header, HTTPException, status
 from typing import Annotated, Union
 import pandas as pd
 from sqlmodel import Session, select, text
@@ -31,7 +31,7 @@ vectorizer = joblib.load('ml_model/model/vectorizer.pkl')
 session_dependency = Annotated[Session, Depends(get_session)]
 
 
-@router.post('/input')
+@router.post('/input', status_code=status.HTTP_201_CREATED)
 async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         today = datetime.now()
@@ -71,8 +71,8 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         session.commit()
     except Exception as e :
         if "UNIQUE constraint failed: airesponsetags.key" in str(e):
-            return {"message":"Error", "erro": "Tag/Document name already analyzed. Please choose another or rename it"} 
-        return {"message":"Error", "erro": str(e)}
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Tag/Document name already analyzed. Please choose another or rename it")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     
     session.refresh(dict_to_db)
     return {"message": "success", "sample": result}

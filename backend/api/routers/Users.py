@@ -39,30 +39,39 @@ def create_user(user: CreateUser, session: session_dependency):
 
 @router.patch('/admin/{user_id}', status_code=status.HTTP_200_OK)
 def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, Body()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    try:
+        UUID(user_id.replace("-", ""))
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="ID must be on UUID string: 91ff7c01-cc8c-4a77-85db-384859d7aa39 or 91ff7c01cc8c4a7785db384859d7aa39")
+
+
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
+    
+    user_db = session.get(Users, UUID(user_id.replace("-", "")))
+    if not (user_db) :
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not founded")
+    if user_db.email == "admin@admin.com":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin user is immutable")
+    
+    if user.password :
+        user.password = create_hash_password(user.password)
+    user_body = user.model_dump(exclude_unset=True)
+    user_db.sqlmodel_update(user_body)
+    
     try :
-        user_accessing = decode_token(token)
-        is_user_admin = user_accessing.get('is_admin')
-        if not (is_user_admin) :
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
-        
-        user_db = session.get(Users, UUID(user_id))
-        if not (user_db) :
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not founded")
-
-        if user_db.email == "admin@admin.com":
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin user is immutable")
-
-        if user.password :
-            user.password = create_hash_password(user.password)
-        user_body = user.model_dump(exclude_unset=True)
-        user_db.sqlmodel_update(user_body)
-
         session.add(user_db)
         session.commit()
         session.refresh(user_db)
 
         return user_db
     except Exception as e :
+        string_error = str(e)
+        unique_string_pos = string_error.lower().find("unique constraint failed")
+        if (unique_string_pos != -1) :
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=unique_constraint_message(e))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.delete('/admin/{user_id}', status_code=status.HTTP_204_NO_CONTENT)

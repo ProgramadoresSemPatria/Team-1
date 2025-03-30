@@ -113,7 +113,7 @@ export function StepperNextButton({
       size={size}
       onClick={onClick ?? nextStep}
       {...props}
-      className="w-full bg-sky-700 font-bold text-lg lg:text-2xl lg:h-12"
+      className="w-full bg-sky-700 font-bold text-lg lg:text-2xl lg:h-12 hover:bg-sky-800"
     >
       {text ?? 'Next'}
     </Button>

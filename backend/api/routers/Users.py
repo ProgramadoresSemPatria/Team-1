@@ -60,11 +60,20 @@ def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, 
     except Exception as e :
         return str(e)
 
-@router.delete('/{user_id}')
-def delete_user(user_id:Annotated[str, Path()], session: session_dependency) :
+@router.delete('/admin/{user_id}')
+def delete_user(user_id:Annotated[str, Path()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]) :
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(400, detail="You are not allow to do it")
+    
     user_db = session.get(Users, UUID(user_id))
-    if not user_db :
+    if not (user_db) :
         raise HTTPException(status_code=404, detail="User not founded")
+
+    if user_db.email == "admin@admin.com":
+            raise HTTPException(status_code=400, detail="Admin user is immutable")
+
     session.delete(user_db)
     session.commit()
     return {"message":"User deleted"}

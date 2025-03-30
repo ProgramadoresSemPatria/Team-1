@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException, Body, Response
+from fastapi import Depends, APIRouter, HTTPException, Body, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from typing import Annotated
@@ -19,14 +19,14 @@ o_auth_pass_bearer = OAuth2PasswordBearer(tokenUrl="/api/auth/login/swagger")
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 
-@router.post('/login/swagger')
+@router.post('/login/swagger', status_code=status.HTTP_200_OK)
 def login_user_swagger(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
     statement = select(Users).where(Users.email == str(form_data.username).replace("\t",""))
     user_instance = session.exec(statement).one()
     if not user_instance:
-        raise HTTPException(status_code=404, detail="User or Password Incorrect")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User or Password Incorrect")
     if not verify_password(form_data.password, user_instance.password):
-        raise HTTPException(status_code=404, detail="User or Password Incorrect")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User or Password Incorrect")
     token = create_token({
                 "username": user_instance.username, 
                 "cpf" : user_instance.cpf,

@@ -113,7 +113,7 @@ def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_au
 def filter_inputted(
     session: session_dependency, 
     token: Annotated[str, Depends(o_auth_pass_bearer)],
-    tags: Annotated[list[str] | None, Body()] = None,
+    tags: Annotated[dict[str,list[str]] | None, Body()] = None,
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
     items_per_page:Annotated[int, Query(le=100)] = 10, 
     page:Annotated[int, Query()] = 1,

@@ -18,18 +18,18 @@ router = APIRouter(
 
 session_dependency = Annotated[Session, Depends(get_session)] # Help on database management
 
-@router.post('/', response_model=BaseUser)
+@router.post('/', response_model=BaseUser, status_code=status.HTTP_201_CREATED)
 def create_user(user: CreateUser, session: session_dependency):
-    user_to_db = Users.model_validate(user)
-    input_password = user_to_db.password
-    user_to_db.password = create_hash_password(input_password)
-    session.add(user_to_db)
     try:
+        user_to_db = Users.model_validate(user)
+        input_password = user_to_db.password
+        user_to_db.password = create_hash_password(input_password)
+        session.add(user_to_db)
         session.commit()
+        session.refresh(user_to_db)
+        return user_to_db
     except Exception as e :
-        raise HTTPException(status_code=400, detail=str(e._message()))
-    session.refresh(user_to_db)
-    return user_to_db
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.patch('/admin/{user_id}', status_code=status.HTTP_200_OK)

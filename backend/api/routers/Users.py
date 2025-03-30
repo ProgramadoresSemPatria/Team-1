@@ -78,7 +78,7 @@ def delete_user(user_id:Annotated[str, Path()], session: session_dependency, tok
     session.commit()
     return {"message":"User deleted"}
 
-@router.get("/", response_model=list[PublicUser])
+@router.get("/", response_model=list[PublicUser], status_code=status.HTTP_200_OK)
 def retrieve_all_users(session: session_dependency):
     users = session.exec(select(Users)).all()
     return users

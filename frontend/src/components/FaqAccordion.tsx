@@ -16,7 +16,7 @@ export function FaqAccordion({
       className="border rounded-md px-4 md:px-8 w-9/10 lg:w-[100vh]"
     >
       <AccordionItem value="item-1">
-        <AccordionTrigger>
+        <AccordionTrigger className='hover:cursor-pointer'>
           <h3 className="text-lg font-bold text-gray-800 md:text-2xl text-left">
             {title}
           </h3>

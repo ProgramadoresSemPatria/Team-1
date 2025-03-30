@@ -9,7 +9,7 @@ export function PricingSection() {
         Our Pricing
       </h2>
 
-      <Tabs defaultValue="monthly" className="w-full max-w-3xl mx-auto mt-8">
+      <Tabs defaultValue="monthly" className="w-full flex flex-col items-center max-w-3xl mx-auto mt-8">
         <TabsList className="flex w-full justify-center mb-8">
           <TabsTrigger value="monthly" className="hover:cursor-pointer">
             Monthly
@@ -19,13 +19,13 @@ export function PricingSection() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="monthly">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20 md:min-w-[1000px]">
             <CardStandard isYearly={false} />
             <CardPro isYearly={false}/>
           </div>
         </TabsContent>
         <TabsContent value="yearly">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20 md:w-full">
             <CardStandard isYearly={true} />
             <CardPro isYearly={true} />
           </div>

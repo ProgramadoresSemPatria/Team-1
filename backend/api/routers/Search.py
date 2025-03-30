@@ -109,7 +109,7 @@ def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_au
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.post('/input/filter/')
+@router.post('/input/filter/', status_code=status.HTTP_200_OK)
 def filter_inputted(
     session: session_dependency, 
     token: Annotated[str, Depends(o_auth_pass_bearer)],
@@ -124,7 +124,7 @@ def filter_inputted(
     user_id = str(user.get("id"))
 
     if (date and not date_operator) or (date_operator and not date) :
-        return {"message": "Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]"}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]")
 
 
     filters = {}
@@ -149,7 +149,7 @@ def filter_inputted(
         return to_return
     except Exception as e:
         print(e)
-        return {"message" : "Failed to get data!", "erro" : str(e._message)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.delete('/input/delete/{tag}')
 def delete_response(session:session_dependency, tag:Annotated[str, Path()], token: Annotated[str, Depends(o_auth_pass_bearer)]):

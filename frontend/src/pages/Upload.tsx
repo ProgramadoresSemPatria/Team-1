@@ -9,7 +9,7 @@ export function Upload() {
 					Upload your data file to generate insights with power of AI
 				</p>
 			</div>
-			<div className="w-full flex items-center justify-center h-[calc(100vh-300px)]">
+			<div className="w-full mt-10 flex items-center justify-center h-[calc(100vh-300px)] md:mt-0">
 				<TriangleUpload />
 			</div>
 		</>

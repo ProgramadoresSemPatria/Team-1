@@ -45,14 +45,14 @@ def login_user_swagger(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
 def auth(token: Annotated[str, Depends(o_auth_pass_bearer)]):
     return  {"detail" : "You are now authenticated!"}
 
-@router.post('/login')
+@router.post('/login', status_code=status.HTTP_200_OK)
 async def login_user(user: Annotated[UserIn, Body()], session: session_dependency):
     try :
         statement = select(Users).where(Users.email == user.email)
         user_instance = session.exec(statement).one()
         if(user_instance) :
             if not verify_password(user.password, user_instance.password) :
-                raise HTTPException(status_code=404, detail="User or Password Incorrect")
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
             token = create_token({
                         "username": user_instance.username, 
                         "cpf" : user_instance.cpf,
@@ -68,7 +68,7 @@ async def login_user(user: Annotated[UserIn, Body()], session: session_dependenc
                 "access_token" : f"Bearer {token}", 
                 "token_type": "bearer"}
         else :
-            raise HTTPException(status_code=404, detail="User or Password Incorrect")
-        raise HTTPException(status_code=404, detail="User or Password Incorrect")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

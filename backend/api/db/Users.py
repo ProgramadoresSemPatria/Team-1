@@ -15,6 +15,7 @@ class BaseUser(SQLModel):
 class Users(BaseUser, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     password: str 
+    is_admin: bool = Field(default=False)
     
 
 class CreateUser(BaseUser):
@@ -38,3 +39,14 @@ class RetrieveUser(BaseUser):
 
 class PublicUser(BaseModel):
     username: str
+
+class UpdateUserAdmin(BaseUser):
+    name: str | None = Field(default=None, index=True)
+    username: str | None = Field(default=None, index=True)
+    email: EmailStr | None = Field(default=None, unique=True, nullable=False, index=True)
+    cpf: str | None = Field(default=None, )
+    cnpj: str | None = Field(default=None, unique=True)
+    company_name: str | None = Field(default=None, )
+    company_type: str | None = Field(default=None, )
+    is_admin: bool | None = Field(default=False),
+    password: str | None = Field(default=None)

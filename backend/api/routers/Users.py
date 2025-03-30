@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header
+from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header, status
 from typing import Annotated
 from sqlmodel import Session, select
 
@@ -93,12 +93,12 @@ def retrieve_all_users_admin(session: session_dependency, token: Annotated[str, 
     return users
 
 
-@router.get('/me')
+@router.get('/me', status_code=status.HTTP_200_OK)
 def get_me(token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         return {"message":"Success!", "data": decode_token(token)}
     except Exception as e:
-        return {"message":"Failed!", "erro": str(e)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.get("/{user_id}", response_model=RetrieveUser)
 def retrieve_user(user_id:Annotated[int, Path()], session: session_dependency):

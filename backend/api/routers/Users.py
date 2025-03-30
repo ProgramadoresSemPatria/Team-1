@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header
 from typing import Annotated
-
 from sqlmodel import Session, select
+
+from uuid import UUID
 
 from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, PublicUser
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 from api.utils.token import decode_token
 from .auth import o_auth_pass_bearer
-
 from ..utils.token import create_hash_password
 
 router = APIRouter(
@@ -47,8 +47,8 @@ def update_user(user_id:Annotated[int, Path()], user:Annotated[UpdateUser, Body(
     return user_db
 
 @router.delete('/{user_id}')
-def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
-    user_db = session.get(Users, user_id)
+def delete_user(user_id:Annotated[str, Path()], session: session_dependency) :
+    user_db = session.get(Users, UUID(user_id))
     if not user_db :
         raise HTTPException(status_code=404, detail="User not founded")
     session.delete(user_db)

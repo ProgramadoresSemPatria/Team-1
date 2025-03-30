@@ -99,7 +99,7 @@ def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.get('/input/distinct_tag')
+@router.get('/input/distinct_tag', status_code=status.HTTP_200_OK)
 def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         user = decode_token(token)
@@ -107,7 +107,7 @@ def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_au
         result = session.execute(text(f"SELECT DISTINCT tag FROM AiResponseTags WHERE user_id='{user_id.replace('-', '')}'"))
         return [i[0] for i in result.all()]
     except Exception as e:
-        return {"message": "erro", "erro": str(e)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.post('/input/filter/')
 def filter_inputted(

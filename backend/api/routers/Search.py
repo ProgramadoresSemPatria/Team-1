@@ -82,7 +82,7 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
     # ALL THE AI LOGIC HERE
     return {"message": "We are searching for feedbacks for you, please wait until finish!", "keywords": keywords}
 
-@router.get('/input/group/')
+@router.get('/input/group/', status_code=status.HTTP_200_OK)
 def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         user = decode_token(token.removeprefix("bearer ").removeprefix("Bearer "))
@@ -97,7 +97,7 @@ def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_
         ]
         return to_return
     except Exception as e:
-        return {"message": "erro", "erro": str(e)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.get('/input/distinct_tag')
 def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):

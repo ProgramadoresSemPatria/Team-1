@@ -55,7 +55,7 @@ export function CsvAnalyze() {
 			</p>
 
 			{feedbacks.length === 0 && (
-				<div className="flex justify-center mt-60">
+				<div className="flex justify-center mt-10 md:mt-60">
 					<p className="text-2xl font-regular text-gray-500 ">
 						No data available for analysis. Please upload a CSV file.
 					</p>

@@ -32,7 +32,7 @@ export function AsideNav() {
 	];
 
 	return (
-		<nav className="flex flex-col w-64 border-r py-4 px-2 gap-4">
+		<nav className="flex flex-col md:w-64 border-r py-4 px-2 gap-4">
 			{navItems.map((item) => (
 				<Link key={item.href} to={item.href}>
 					<Button

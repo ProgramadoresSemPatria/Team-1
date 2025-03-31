@@ -1,23 +1,9 @@
 import { SignUpCard } from '@/components/SignUpCard';
 import { WelcomeMessageSignUp } from '@/components/WelcomeMessageSignUp';
+import useMobile from '@/hooks/useMobile';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { useEffect } from 'react';
 export function Register() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    handleResize();
-    setIsMounted(true);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (!isMounted) return null;
+  const isMobile = useMobile();
 
   return (
     <div className="flex flex-col items-center min-h-screen justify-center gap-10 bg-gray-100 lg:flex-row lg:gap-30">

@@ -21,7 +21,7 @@ export function FeatureCard({
   features,
 }: IFeatureCardProps) {
   return (
-    <Card className="hover:shadow-md transition-all hover:shadow-sky-700 lg:min-w-[70vh] lg:min-h-[30vh] lg:p-8 lg:gap-10">
+    <Card className="hover:shadow-md transition-all hover:shadow-sky-700 lg:min-w-[50vh] lg:min-h-[30vh] lg:p-8 lg:gap-10">
       <CardHeader className="gap-5">
         <CardTitle className="flex items-center gap-2 text-2xl lg:text-3xl lg:gap-4">
           {icon} {title}

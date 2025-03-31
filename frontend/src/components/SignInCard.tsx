@@ -29,8 +29,11 @@ export function SignInCard() {
 
   const { login, isLoginLoading } = useAuthContext();
 
-  async function onSubmit ({email, password}: z.infer<typeof loginFormSchema>) {
-    await login({email, password});
+  async function onSubmit({
+    email,
+    password,
+  }: z.infer<typeof loginFormSchema>) {
+    await login({ email, password });
   }
 
   return (
@@ -38,17 +41,17 @@ export function SignInCard() {
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-start px-6 md:w-[40vh] md:px-10 md:pt-6"
+      className="flex flex-col items-center mb-10 justify-start px-6 md:w-[40vh] md:px-10 md:pt-6"
     >
-      <Card className="flex flex-col items-center justify-start px-3.5 md:w-[40vh] md:px-10 md:pt-6">
-        <h2 className="text-3xl mt-4 mb-2 text-sky-400 font-bold md:text-4xl">
+      <Card className="flex flex-col items-center justify-start px-3.5 md:min-w-[60vh] md:min-h-[45vh] md:px-10 md:pt-6">
+        <h2 className="text-3xl mb-2 font-bold md:text-4xl">
           Sign in to your account
         </h2>
 
         <form action="" onSubmit={handleSubmit(onSubmit)} className="w-full">
           <div className="flex flex-col gap-2">
             <Label htmlFor="email" className="font-bold text-xl md:text-2xl">
-              Enter your Email
+              Email
             </Label>
             <Input
               type="email"
@@ -65,7 +68,7 @@ export function SignInCard() {
           </div>
           <div className="flex flex-col gap-2 mt-4">
             <Label htmlFor="password" className="font-bold text-xl md:text-2xl">
-              Enter your password
+              Password
             </Label>
             <Input
               type="password"
@@ -83,17 +86,17 @@ export function SignInCard() {
           <div className="flex flex-col items-center">
             <Button
               type="submit"
-              className="text-center bg-sky-600 rounded-lg p-6 font-bold text-xl mt-5 mb-3 w-full hover:cursor-pointer hover:bg-sky-700 md:text-2xl"
+              className="text-center bg-sky-700 rounded-lg p-6 font-bold text-xl mt-5 mb-3 w-full hover:cursor-pointer hover:bg-sky-800 md:text-2xl"
             >
-             {isLoginLoading ? <Spinner>Signing in...</Spinner> : "Sign in"}
+              {isLoginLoading ? <Spinner>Signing in...</Spinner> : 'Sign in'}
             </Button>
             <CardFooter>
-              <p className="text-lg md:text-xl md:mt-4">
+              <p className="min-w-[300px] text-center text-lg md:text-xl md:mt-4">
                 New to FeedAI?{' '}
                 <Button
                   asChild
                   variant="link"
-                  className="text-blue-600 hover:text-blue-700 text-lg md:text-xl px-0"
+                  className="text-blue-700 hover:text-blue-800 text-lg md:text-xl px-0"
                 >
                   <Link to="/register">Create account</Link>
                 </Button>

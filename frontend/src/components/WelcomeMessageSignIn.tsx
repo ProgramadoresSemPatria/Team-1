@@ -1,22 +1,10 @@
 import { motion } from 'motion/react';
 import FeedAI_Logo from '@/assets/FeedAI_Logo.png';
-import { useEffect, useState } from 'react';
+import useMobile from '@/hooks/useMobile';
 
 export function WelcomeMessageSignIn() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    handleResize();
-    setIsMounted(true);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (!isMounted) return null;
+   const isMobile = useMobile()
+   
   return (
     <motion.div
       initial={{ opacity: 0, y: isMobile ? -100 : 100 }}

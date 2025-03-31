@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import FeedAILogo from '@/assets/FeedAI_Logo.png';
+import { Link } from 'react-router-dom';
 
 export function Footer() {
   return (
@@ -15,9 +16,11 @@ export function Footer() {
             <span className="text-lg font-bold lg:text-2xl">FeedAI</span>
           </div>
           <div className="flex gap-6 mb-4 md:mb-0">
-            <Button className="bg-sky-700 font-bold lg:w-96 hover:cursor-pointer shadow-md shadow-black/80">
-              Get Started
-            </Button>
+            <Link to="/register">
+              <Button className="bg-sky-700 font-bold lg:w-96 hover:cursor-pointer shadow-md shadow-black/80">
+                Get Started
+              </Button>
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <a

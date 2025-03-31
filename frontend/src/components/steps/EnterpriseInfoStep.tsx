@@ -1,10 +1,8 @@
 import { useFormContext } from 'react-hook-form';
-import {
-  StepperFooter,
-  StepperNextButton,
-  StepperPreviousButton,
-  useStepper,
-} from '../Stepper';
+import { useStepper } from '@/hooks/useStepper';
+import { StepperFooter } from '../Stepper/StepperFooter';
+import { StepperNextButton } from '../Stepper/StepperNextButton';
+import { StepperPreviousButton } from '../Stepper/StepperPreviousButton';
 import { z } from 'zod';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -35,7 +33,10 @@ export function EnterpriseInfoStep() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className="flex flex-col gap-2 w-[42vh]">
-        <Label htmlFor="enterpriseName" className="font-bold text-xl lg:text-2xl">
+        <Label
+          htmlFor="enterpriseName"
+          className="font-bold text-xl lg:text-2xl"
+        >
           Enterprise name
         </Label>
         <Input
@@ -54,10 +55,7 @@ export function EnterpriseInfoStep() {
         )}
       </div>{' '}
       <div className="flex flex-col gap-2 w-[42vh]">
-        <Label
-          htmlFor="businessType"
-          className="font-bold text-xl lg:text-2xl"
-        >
+        <Label htmlFor="businessType" className="font-bold text-xl lg:text-2xl">
           Business type
         </Label>
         <Input

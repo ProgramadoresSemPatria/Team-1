@@ -1,7 +1,6 @@
-import { cn } from '@/lib/utils';
-import { createContext, useCallback, useContext, useState } from 'react';
-import { Button } from './ui/button';
+import { createContext, useCallback, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { cn } from '@/lib/utils';
 
 interface IStepperContext {
   previousStep: () => void;
@@ -10,10 +9,6 @@ interface IStepperContext {
 }
 
 export const StepperContext = createContext({} as IStepperContext);
-
-export function useStepper() {
-  return useContext(StepperContext);
-}
 
 interface IStepperProps {
   initialStep?: number;
@@ -89,53 +84,5 @@ export function Stepper({ steps, initialStep = 0 }: IStepperProps) {
         <div>{steps[currentStep].content}</div>
       </div>
     </StepperContext.Provider>
-  );
-}
-
-export const StepperFooter = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <footer className="flex flex-col items-center justify-center w-full gap-2 mt-6">
-      {children}
-    </footer>
-  );
-};
-export function StepperNextButton({
-  size = 'default',
-  type = 'button',
-  onClick,
-  text,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof Button> & { text?: string }) {
-  const { nextStep } = useStepper();
-  return (
-    <Button
-      type={type}
-      size={size}
-      onClick={onClick ?? nextStep}
-      {...props}
-      className="w-full bg-sky-700 font-bold text-lg lg:text-2xl lg:h-12 hover:bg-sky-800"
-    >
-      {text ?? 'Next'}
-    </Button>
-  );
-}
-
-export function StepperPreviousButton({
-  size = 'default',
-  type = 'button',
-  onClick,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof Button>) {
-  const { previousStep } = useStepper();
-  return (
-    <Button
-      type={type}
-      size={size}
-      onClick={onClick ?? previousStep}
-      {...props}
-      className="w-full text-lg lg:text-2xl lg:h-12"
-    >
-      Previous
-    </Button>
   );
 }

@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Button } from './ui/button';
-import { CardFooter, Card } from './ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { Button } from '@/components/ui/button';
+import { CardFooter, Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { TriangleAlert } from 'lucide-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useAuthContext from '@/hooks/useAuth';
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 
 export function SignInCard() {
   const loginFormSchema = z.object({

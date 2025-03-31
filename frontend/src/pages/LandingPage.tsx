@@ -5,7 +5,7 @@ import { PricingSection } from '@/components/PricingSection';
 import { ExplanationSection } from '@/components/ExplanationSection';
 import { ProductFlow } from '@/components/ProductFlow';
 import { Header } from '@/layouts/Header';
-import { Footer } from '@/components/Footer';
+import { Footer } from '@/components/Footer/index';
 
 export function LandingPage() {
   return (

@@ -1,8 +1,6 @@
-import {
-  StepperNextButton,
-  StepperPreviousButton,
-  StepperFooter,
-} from '../Stepper';
+import { StepperFooter } from '../Stepper/StepperFooter';
+import { StepperNextButton } from '../Stepper/StepperNextButton';
+import { StepperPreviousButton } from '../Stepper/StepperPreviousButton';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useFormContext } from 'react-hook-form';
@@ -34,8 +32,8 @@ export function AccountInfoStep() {
         />
         {form.formState.errors.accountInfo?.email && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500 ">
               {form.formState.errors.accountInfo?.email?.message}
             </span>
           </div>
@@ -75,8 +73,8 @@ export function AccountInfoStep() {
         />
         {form.formState.errors.accountInfo?.confirmPassword && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500 ">
               {form.formState.errors.accountInfo?.confirmPassword?.message}
             </span>
           </div>

@@ -1,15 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Stepper } from './Stepper';
-import { accountInfoSchema, AccountInfoStep } from './steps/AccountInfoStep';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { accountInfoSchema, AccountInfoStep } from '../Steps/AccountInfoStep';
 import {
   enterpriseInfoSchema,
   EnterpriseInfoStep,
-} from './steps/EnterpriseInfoStep';
-import { personalInfoSchema, PersonalInfoStep } from './steps/PersonalInfoStep';
+} from '../Steps/EnterpriseInfoStep';
+import {
+  personalInfoSchema,
+  PersonalInfoStep,
+} from '../Steps/PersonalInfoStep';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import useAuthContext from '@/hooks/useAuth';
+import { Stepper } from '@/context/StepperContext';
 const schema = z.object({
   personalInfo: personalInfoSchema,
   enterpriseInfo: enterpriseInfoSchema,

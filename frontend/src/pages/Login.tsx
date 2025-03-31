@@ -1,5 +1,5 @@
 import { SignInCard } from '@/components/SignInCard';
-import { WelcomeMessageSignIn } from '@/components/WelcomeMessageSignIn';
+import { WelcomeMessageSignIn } from '@/components/WelcomeMessageSignIn/index';
 
 export function Login() {
   return (

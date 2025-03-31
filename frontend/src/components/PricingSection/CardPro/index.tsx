@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 export function CardPro({ isYearly }: { isYearly: boolean }) {
   return (
-    <Card className="relative border-sky-700 border-2 flex flex-col items-start lg:w-full">
+    <Card className="relative border-sky-700 border-2 flex flex-col items-start lg:min-w-[400px] lg:w-full">
       <span className="absolute top-0 right-0 -translate-y-[1px] bg-sky-700 text-white text-lg px-2 py-1 lg:text-2xl font-bold lg:px-5 lg:py-1 rounded-bl-lg rounded-tr-lg">
         Popular
       </span>

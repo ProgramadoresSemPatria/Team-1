@@ -1,3 +1,4 @@
+import useAuthContext from "@/hooks/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
 
 type AuthGuardProps = {
@@ -5,14 +6,10 @@ type AuthGuardProps = {
 };
 
 export function AuthGuard({ isPrivate }: AuthGuardProps) {
-	const isLogged = true;
-
+	 const { isLogged } = useAuthContext();
+	 
 	if (isPrivate && !isLogged) {
 		return <Navigate to="/login" />;
-	}
-
-	if (!isPrivate && isLogged) {
-		return <Navigate to="/" />;
 	}
 
 	return <Outlet />;

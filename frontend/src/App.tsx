@@ -1,6 +1,6 @@
 import "@/App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthProvider from "./context";
+import AuthProvider from "@/context/AuthContext";
 import { AuthGuard } from "./layouts/AuthGuard";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";

@@ -46,8 +46,8 @@ export function EnterpriseInfoStep() {
         />
         {form.formState.errors.enterpriseInfo?.enterpriseName && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.enterpriseInfo?.enterpriseName?.message}
             </span>
           </div>
@@ -68,8 +68,8 @@ export function EnterpriseInfoStep() {
         />
         {form.formState.errors.enterpriseInfo?.businessType && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.enterpriseInfo?.businessType?.message}
             </span>
           </div>
@@ -87,8 +87,8 @@ export function EnterpriseInfoStep() {
         />
         {form.formState.errors.enterpriseInfo?.CNPJ && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.enterpriseInfo?.CNPJ?.message}
             </span>
           </div>

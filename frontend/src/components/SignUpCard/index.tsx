@@ -1,11 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Stepper } from './Stepper';
-import { accountInfoSchema, AccountInfoStep } from './steps/AccountInfoStep';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Stepper } from '../Stepper';
+import { accountInfoSchema, AccountInfoStep } from '../steps/AccountInfoStep';
 import {
   enterpriseInfoSchema,
   EnterpriseInfoStep,
-} from './steps/EnterpriseInfoStep';
-import { personalInfoSchema, PersonalInfoStep } from './steps/PersonalInfoStep';
+} from '../steps/EnterpriseInfoStep';
+import {
+  personalInfoSchema,
+  PersonalInfoStep,
+} from '../steps/PersonalInfoStep';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';

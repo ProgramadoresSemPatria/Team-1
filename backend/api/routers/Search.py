@@ -115,7 +115,7 @@ def filter_inputted(
     token: Annotated[str, Depends(o_auth_pass_bearer)],
     tags: Annotated[dict[str,list[str]] | None, Body()] = None,
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
-    items_per_page:Annotated[int, Query(le=100)] = 10, 
+    items_per_page:Annotated[int, Query()] = 10, 
     page:Annotated[int, Query()] = 1,
     date:Annotated[str | None, Query()] = None, 
     date_operator:Annotated[DateOperator | None, Query()] = None, 

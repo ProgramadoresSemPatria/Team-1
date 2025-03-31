@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { LayoutDashboard, Upload, BarChart2 } from "lucide-react";
+import { Upload, BarChart2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -15,17 +15,12 @@ export function AsideNav() {
 
 	const navItems: NavItem[] = [
 		{
-			title: "Dashboard",
-			href: "/dashboard",
-			icon: <LayoutDashboard className="h-9 w-9" />,
-		},
-		{
 			title: "Upload",
 			href: "/upload",
 			icon: <Upload className="h-9 w-9" />,
 		},
 		{
-			title: "Análises",
+			title: "Analytics",
 			href: "/analytics",
 			icon: <BarChart2 className="h-9 w-9" />,
 		},

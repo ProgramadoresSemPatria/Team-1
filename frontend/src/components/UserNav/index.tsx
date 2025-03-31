@@ -10,20 +10,26 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAuthContext from "@/hooks/useAuth";
+import ProfileModal from "../ModalPerfil";
+import { useState } from "react";
 
 export function UserNav() {
-	const userName = "Gabriel Melo";
+	const { user, logout } = useAuthContext();
+	const [isPerfilModalOpen, setIsPerfilModalOpen] = useState(false);
 
-	const userInitials = userName
+	const userInitials = user?.name
 		.split(" ")
 		.map((name) => name[0])
 		.join("")
 		.toUpperCase();
 
-	const email = "biel@biel.com";
-
 	return (
+		
 		<DropdownMenu>
+			{isPerfilModalOpen && (
+				<ProfileModal open={isPerfilModalOpen} setOpen={setIsPerfilModalOpen} />
+			)}
 			<DropdownMenuTrigger asChild>
 				<button
 					type="button"
@@ -34,28 +40,28 @@ export function UserNav() {
 						<AvatarFallback>{userInitials}</AvatarFallback>
 					</Avatar>
 					<span className="hidden md:inline-flex text-lg font-medium">
-						{userName}
+						{user?.name}
 					</span>
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56" align="end" forceMount>
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
-						<p className="text-lg font-medium leading-none">{userName}</p>
+						<p className="text-lg font-medium leading-none">{user?.name}</p>
 						<p className="text-md leading-none text-muted-foreground">
-							{email}
+							{user?.email}
 						</p>
 					</div>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem>
+					<DropdownMenuItem onClick={() => setIsPerfilModalOpen(true)}>
 						<User className="mr-2 h-8 w-8" />
 						<span>Perfil</span>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>
+				<DropdownMenuItem onClick={() => logout()}>
 					<LogOut className="mr-2 h-8 w-8" />
 					<span>Sair</span>
 				</DropdownMenuItem>

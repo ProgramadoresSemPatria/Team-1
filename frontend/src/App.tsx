@@ -38,7 +38,6 @@ function App() {
 							</Route>
 							<Route element={<AuthGuard isPrivate={true} />}>
 								<Route element={<FixedLayout />}>
-									<Route path="/dashboard" element={<div>oi</div>} />
 									<Route path="/upload" element={<Upload />} />
 									<Route path="/analytics" element={<CsvAnalyze />} />
 								</Route>

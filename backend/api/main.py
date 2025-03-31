@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 from sqlmodel import Session
 
@@ -27,6 +28,14 @@ app = FastAPI(
         "name": "Apache 2.0",
         "identifier": "MIT",
     }
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth.router, prefix="/api")

@@ -144,7 +144,8 @@ def filter_inputted(
     if sentiment:
         filters["sentiment_prediction"] = [sentiment]
     if tags:
-        filters['tag'] = tags
+        tags_dict_key = list(tags.keys())[0]
+        filters['tag'] = tags[tags_dict_key]
     filters['airesponse.user_id'] = [user_id.replace('-', '')]
 
     where_clause = build_where_clause(**filters)

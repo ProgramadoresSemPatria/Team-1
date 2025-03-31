@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CardStandard } from './CardStandard/index';
-import { CardPro } from './CardPro/index';
+import { CardStandard } from './CardStandard';
+import { CardPro } from './CardPro';
 
 export function PricingSection() {
   return (

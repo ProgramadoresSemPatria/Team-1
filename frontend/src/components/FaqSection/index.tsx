@@ -1,4 +1,4 @@
-import { FaqAccordion } from './FaqAccordion/index';
+import { FaqAccordion } from './FaqAccordion';
 
 export function FaqSection() {
   return (

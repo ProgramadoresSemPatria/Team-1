@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useAuthContext from '@/hooks/useAuth';
-import Spinner from '../Spinner/index';
+import Spinner from '../Spinner';
 
 export function SignInCard() {
   const loginFormSchema = z.object({

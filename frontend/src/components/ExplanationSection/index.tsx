@@ -1,5 +1,5 @@
 import { FileSpreadsheet, Globe } from 'lucide-react';
-import { FeatureCard } from '../FeatureCard/index';
+import { FeatureCard } from '../FeatureCard';
 
 export function ExplanationSection() {
   return (

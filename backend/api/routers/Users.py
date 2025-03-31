@@ -37,7 +37,7 @@ def create_user(user: CreateUser, session: session_dependency):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.patch('/admin/{user_id}', status_code=status.HTTP_200_OK)
+@router.patch('/{user_id}', status_code=status.HTTP_200_OK, response_model=BaseUser)
 def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, Body()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         UUID(user_id.replace("-", ""))
@@ -47,8 +47,12 @@ def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, 
 
     user_accessing = decode_token(token)
     is_user_admin = user_accessing.get('is_admin')
-    if not (is_user_admin) :
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
+
+    user_accessing_id = str(user_accessing.get("id")).replace("-", "")
+    if (user_accessing_id != user_id.replace("-", "")) :
+        if not (is_user_admin) :
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin permission required!")
+
     
     user_db = session.get(Users, UUID(user_id.replace("-", "")))
     if not (user_db) :

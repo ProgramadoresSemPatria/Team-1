@@ -2,7 +2,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { WordCascade } from './WordCascade';
+import { WordCascade } from '../WordCascade/index';
 
 import UploadPhoto from '@/assets/Upload.png';
 

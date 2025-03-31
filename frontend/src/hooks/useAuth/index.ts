@@ -1,6 +1,6 @@
 import { createSession } from "@/services/create-session";
 import { createUser } from "@/services/create-user";
-import { AuthContext } from "@/context";
+import { AuthContext } from "@/context/AuthContext";
 import type { loginPayload } from "@/types/login";
 import type { registerPayload } from "@/types/register";
 import { projectConstants } from "@/utils/constants";

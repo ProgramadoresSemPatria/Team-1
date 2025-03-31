@@ -52,20 +52,20 @@ async def login_user(user: Annotated[UserIn, Body()], session: session_dependenc
     if(user_instance) :
         if not verify_password(user.password, user_instance.password) :
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
-            token = create_token({
-                        "username": user_instance.username, 
-                        "cpf" : user_instance.cpf,
-                        "name" : user_instance.name,
-                        "company_name" : user_instance.company_name,
-                        "id" : str(user_instance.id),
-                        "email" : user_instance.email,
-                        "cnpj" : user_instance.cnpj,
-                        "company_type" : user_instance.company_type,
-                        "is_admin": user_instance.is_admin
-                        })
-            return {
-                "access_token" : f"Bearer {token}", 
-                "token_type": "bearer"}
-        else :
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
+        token = create_token({
+                    "username": user_instance.username, 
+                    "cpf" : user_instance.cpf,
+                    "name" : user_instance.name,
+                    "company_name" : user_instance.company_name,
+                    "id" : str(user_instance.id),
+                    "email" : user_instance.email,
+                    "cnpj" : user_instance.cnpj,
+                    "company_type" : user_instance.company_type,
+                    "is_admin": user_instance.is_admin
+                    })
+        return {
+            "access_token" : f"Bearer {token}", 
+            "token_type": "bearer"}
+    else :
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User or Password Incorrect")

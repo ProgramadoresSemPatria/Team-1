@@ -1,10 +1,13 @@
 import { z } from 'zod';
-import { StepperFooter, StepperNextButton, useStepper } from '../Stepper';
+import { useStepper } from '@/hooks/useStepper';
+import { StepperFooter } from '../Stepper/StepperFooter';
+import { StepperNextButton } from '../Stepper/StepperNextButton';
 import { useFormContext } from 'react-hook-form';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import type { SignUpFormData } from '../SignUpCard';
 import { TriangleAlert } from 'lucide-react';
+
 export const personalInfoSchema = z.object({
   name: z.string().min(1, { message: 'Please, provide your name' }),
   CPF: z.string().min(1, { message: 'Please, provide a valid CPF' }),
@@ -33,7 +36,6 @@ export function PersonalInfoStep() {
           type="text"
           className="px-2 h-10 lg:h-12"
           placeholder="Your name"
-          
           {...form.register('personalInfo.name')}
         />
         {form.formState.errors.personalInfo?.name && (

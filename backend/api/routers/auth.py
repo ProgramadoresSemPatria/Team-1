@@ -22,7 +22,7 @@ session_dependency = Annotated[Session, Depends(get_session)] # Help on database
 @router.post('/login/swagger', status_code=status.HTTP_200_OK)
 def login_user_swagger(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: session_dependency):
     statement = select(Users).where(Users.email == str(form_data.username).replace("\t",""))
-    user_instance = session.exec(statement).one()
+    user_instance = session.exec(statement).one_or_none()
     if not user_instance:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User or Password Incorrect")
     if not verify_password(form_data.password, user_instance.password):

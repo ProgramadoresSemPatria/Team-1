@@ -7,6 +7,7 @@ from api.routers import auth, Users, Search
 from api.db import create_all_table_and_db, get_session
 from api.utils.token import decode_token, protected_endpoint
 from api.utils.create_admin import create_admin
+import uvicorn
 
 description = """
 # Feed AI
@@ -50,3 +51,7 @@ def creating_on_startup():
 @app.get("/api")
 def root(token: Annotated[protected_endpoint, Depends()]):
     return {"Message": "Hello World!"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)

@@ -1,4 +1,4 @@
-import { BenefitCard } from './BenefitCard';
+import { BenefitCard } from '../BenefitCard/index';
 import {
   BrainCircuit,
   Clock,
@@ -14,7 +14,10 @@ export function BenefitsSection() {
       <h2 className="text-2xl font-bold text-gray-800 md:text-4xl">
         Benefits of using FeedAI
       </h2>
-      <p className="text-gray-500 text-xl mb-10 lg:text-2xl lg:mt-2">Save time and money while getting deeper insights into your customer feedback</p>
+      <p className="text-gray-500 text-xl mb-10 lg:text-2xl lg:mt-2">
+        Save time and money while getting deeper insights into your customer
+        feedback
+      </p>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-20">
         <BenefitCard
           icon={

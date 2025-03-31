@@ -1,8 +1,6 @@
-import {
-  StepperNextButton,
-  StepperPreviousButton,
-  StepperFooter,
-} from '../Stepper';
+import { StepperFooter } from '../Stepper/StepperFooter';
+import { StepperNextButton } from '../Stepper/StepperNextButton';
+import { StepperPreviousButton } from '../Stepper/StepperPreviousButton';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useFormContext } from 'react-hook-form';

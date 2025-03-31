@@ -1,5 +1,5 @@
 import { SignUpCard } from '@/components/SignUpCard';
-import { WelcomeMessageSignUp } from '@/components/WelcomeMessageSignUp';
+import { WelcomeMessageSignUp } from '@/components/WelcomeMessageSignUp/index';
 import useMobile from '@/hooks/useMobile';
 import { motion } from 'framer-motion';
 export function Register() {

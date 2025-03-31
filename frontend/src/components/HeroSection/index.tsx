@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { WordCascade } from '../WordCascade';
 
-import UploadPhoto from '@/assets/Upload.png';
+import DemoVideo from '@/assets/DemoVideo.mp4';
 
 export function HeroSection() {
   return (
@@ -36,12 +36,15 @@ export function HeroSection() {
       <div className="flex flex-col w-full items-center">
         <AspectRatio
           ratio={16 / 9}
-          className="lg:max-h-[70vh] w-full px-4 mt-10 lg:mt-20 lg:ml-20"
+          className="lg:max-h-[70vh] w-full px-4 mt-10 lg:mt-20 lg:ml-20 lg:min-h-[48vh]"
         >
-          <img
-            src={UploadPhoto}
-            alt="Landing Page"
-            className="rounded-lg shadow-sm shadow-black/80"
+          <video
+            src={DemoVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="rounded-lg shadow-sm shadow-black/80 w-full h-full object-cover"
           />
         </AspectRatio>
 

@@ -150,7 +150,7 @@ def filter_inputted(
 
     where_clause = build_where_clause(**filters)
     
-    statment = f"SELECT airesponse.consulted_query_date, airesponse.sentiment_prediction, airesponse.text, airesponsetags.tag FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date {where_clause if where_clause else ""}"
+    statment = f"SELECT airesponse.consulted_query_date, airesponse.sentiment_prediction, airesponse.text, airesponsetags.tag FROM airesponse LEFT JOIN airesponsetags on airesponse.consulted_query_date = airesponsetags.consulted_query_date {where_clause if where_clause else ''}"
 
     try:
         results = session.execute(text(statment)).all()

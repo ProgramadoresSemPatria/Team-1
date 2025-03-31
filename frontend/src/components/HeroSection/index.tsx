@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { WordCascade } from '../WordCascade';
 
 import DemoVideo from '@/assets/DemoVideo.mp4';
+import { Link } from 'react-router-dom';
 
 export function HeroSection() {
   return (
@@ -27,10 +28,12 @@ export function HeroSection() {
           FeedAI analyzes your customer reviews instantly. No more dedicating
           teams for weeks to understand what people are saying about your brand.
         </p>
-        <Button className="shadow-lg shadow-black/80 hidden mt-32 mb-10 h-16 rounded-xl bg-sky-700 font-bold text-2xl text-white w-8/9 hover:scale-105 hover:bg-sky-800 hover:cursor-pointer lg:flex">
-          Get Started{' '}
-          <ArrowRight className="ml-2 mt-[1px] min-w-8 min-h-8 font-bold" />
-        </Button>
+        <Link to="/register">
+          <Button className="shadow-lg shadow-black/80 hidden mt-32 mb-10 h-16 rounded-xl bg-sky-700 font-bold text-2xl text-white w-8/9 hover:scale-105 hover:bg-sky-800 hover:cursor-pointer lg:flex">
+            Get Started{' '}
+            <ArrowRight className="ml-2 mt-[1px] min-w-8 min-h-8 font-bold" />
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col w-full items-center">
@@ -47,10 +50,11 @@ export function HeroSection() {
             className="rounded-lg shadow-sm shadow-black/80 w-full h-full object-cover"
           />
         </AspectRatio>
-
-        <Button className="shadow-lg shadow-black/80 mt-16 mb-10 w-10/11 h-12 py-7 bg-sky-700 font-bold text-lg text-white lg:hidden hover:scale-105 hover:bg-sky-800 hover:cursor-pointer">
-          Get Started <ArrowRight className="w-5 h-5 font-bold mt-0.5" />
-        </Button>
+        <Link to="/register" className='w-full'>
+          <Button className="shadow-lg shadow-black/80 mt-16 mb-10 w-10/11 h-12 py-7 bg-sky-700 font-bold text-lg text-white lg:hidden hover:scale-105 hover:bg-sky-800 hover:cursor-pointer">
+            Get Started <ArrowRight className="w-5 h-5 font-bold mt-0.5" />
+          </Button>
+        </Link>
       </div>
     </motion.div>
   );

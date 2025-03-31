@@ -15,13 +15,13 @@ def map_score(score):
 df['Sentiment'] = df['Score'].apply(map_score)    
 
 df_reduced = pd.concat([
-    df[df['Sentiment'] == 'positivo'].sample(n=20000,),
-    df[df['Sentiment'] == 'negativo'].sample(n=20000),
-    df[df['Sentiment'] == 'neutro'].sample(n=20000)
+    df[df['Sentiment'] == 'positivo'].sample(n=40000,),
+    df[df['Sentiment'] == 'negativo'].sample(n=40000),
+    df[df['Sentiment'] == 'neutro'].sample(n=40000)
 ])
 
 df_reduced.to_csv('dataset/reduced_reviews.csv',index = False)
 
 
 print(df[['Text', 'Score', 'Sentiment']].head(10))
-print(df['Sentiment'].value_counts())
+print(df_reduced['Sentiment'].value_counts())

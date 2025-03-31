@@ -12,7 +12,7 @@ def build_where_clause(**filters):
                 where_clause_parts.append(f"{column} {convert_text_to_operator(operator)} '{val}'")
         else:
             list_formatted = [f"'{i}'" for i in value ]
-            where_clause_parts.append(f"{column} IN ({",".join(list_formatted)})")
+            where_clause_parts.append(f"{column} IN ({','.join(list_formatted)})")
 
     where_clause = "WHERE " + " AND ".join(where_clause_parts) if where_clause_parts else ""
 

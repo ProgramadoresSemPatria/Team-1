@@ -5,9 +5,11 @@ from sqlmodel import Session, select, text
 from sqlalchemy import func, delete
 from pydantic import BaseModel
 from datetime import datetime
+import os
 
 import joblib
 import uuid
+
 
 from ..enum.TagsEnum import TagsEnum
 from ..enum.DateOperator import DateOperator
@@ -33,9 +35,18 @@ session_dependency = Annotated[Session, Depends(get_session)]
 
 @router.post('/input', status_code=status.HTTP_201_CREATED)
 async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    extension = os.path.splitext(file.filename)[1].lower()
+    
+    extension = str(extension)
+    if (extension == ".csv"):
+        df = pd.read_csv(file.file)
+    elif (extension == ".xlsx"):
+        df = pd.read_excel(file.file)
+    else :
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only '.csv' and '.xlsx' files available")
     try:
         today = datetime.now()
-        df = pd.read_csv(file.file)
+        
 
         df['Text'] = df['Text'].apply(clear_text)
 
@@ -56,13 +67,13 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         df_table_dict = df_table.to_dict(orient='records')
         session.bulk_insert_mappings(AiResponse, df_table_dict)
 
-        filename = file.filename.replace('.csv', '')
+        file_name = os.path.splitext(file.filename)[0]
         dict_tag_prediction = {
             "consulted_query_date" : today,
-            "tag" : filename,
+            "tag" : file_name,
             "user_id" : uuid.UUID(user_id),
             "related_key" : f"{str(user_id)}{str(today)}",
-            "key" : f"{str(user_id)}{str(filename)}"
+            "key" : f"{str(user_id)}{str(file_name)}"
         }
         dict_to_db = AiResponseTags.model_validate(dict_tag_prediction)
         session.add(dict_to_db)

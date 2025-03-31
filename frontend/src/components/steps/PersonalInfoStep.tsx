@@ -38,8 +38,8 @@ export function PersonalInfoStep() {
         />
         {form.formState.errors.personalInfo?.name && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.personalInfo?.name?.message}
             </span>
           </div>
@@ -58,8 +58,8 @@ export function PersonalInfoStep() {
         />
         {form.formState.errors.personalInfo?.CPF && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.personalInfo?.CPF?.message}
             </span>
           </div>
@@ -77,8 +77,8 @@ export function PersonalInfoStep() {
         />
         {form.formState.errors.personalInfo?.birthdate && (
           <div className="flex items-center gap-2">
-            <TriangleAlert className="text-red-500 lg:text-2xl" />
-            <span className="text-red-500 lg:text-2xl">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500">
               {form.formState.errors.personalInfo?.birthdate?.message}
             </span>
           </div>

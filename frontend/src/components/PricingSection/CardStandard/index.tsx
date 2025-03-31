@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/card';
 import { CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export function CardStandard({ isYearly }: { isYearly: boolean }) {
   return (
@@ -44,9 +45,11 @@ export function CardStandard({ isYearly }: { isYearly: boolean }) {
           </li>
         </ul>
       </CardContent>
-      <Button className="shadow-md shadow-black/80 w-5/6 mx-auto my-4 font-bold text-lg bg-amber-400 text-white md:text-xl hover:scale-105 hover:cursor-pointer hover:bg-amber-500">
-        Get Started
-      </Button>
+      <Link to="/register" className="w-full">
+        <Button className="shadow-md shadow-black/80 w-5/6 mx-auto my-4 font-bold text-lg bg-amber-400 text-white md:text-xl hover:scale-105 hover:cursor-pointer hover:bg-amber-500">
+          Get Started
+        </Button>
+      </Link>
     </Card>
   );
 }

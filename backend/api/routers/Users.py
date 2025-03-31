@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, Body, Path, HTTPException, Header
 from typing import Annotated
-
 from sqlmodel import Session, select
 
-from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, PublicUser
+from uuid import UUID
+
+from ..db.Users import CreateUser, Users, BaseUser, UpdateUser, RetrieveUser, PublicUser, UpdateUserAdmin
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
 from api.utils.token import decode_token
 from .auth import o_auth_pass_bearer
-
 from ..utils.token import create_hash_password
 
 router = APIRouter(
@@ -31,32 +31,64 @@ def create_user(user: CreateUser, session: session_dependency):
     session.refresh(user_to_db)
     return user_to_db
 
-@router.patch('/{user_id}')
-def update_user(user_id:Annotated[int, Path()], user:Annotated[UpdateUser, Body()], session: session_dependency) -> BaseUser:
-    user_db = session.get(Users, user_id)
+
+@router.patch('/admin/{user_id}')
+def update_user(user_id:Annotated[str, Path()], user:Annotated[UpdateUserAdmin, Body()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    try :
+        user_accessing = decode_token(token)
+        is_user_admin = user_accessing.get('is_admin')
+        if not (is_user_admin) :
+            raise HTTPException(400, detail="You are not allow to do it")
+        
+        user_db = session.get(Users, UUID(user_id))
+        if not (user_db) :
+            raise HTTPException(status_code=404, detail="User not founded")
+
+        if user_db.email == "admin@admin.com":
+            raise HTTPException(status_code=400, detail="Admin user is immutable")
+
+        if user.password :
+            user.password = create_hash_password(user.password)
+        user_body = user.model_dump(exclude_unset=True)
+        user_db.sqlmodel_update(user_body)
+
+        session.add(user_db)
+        session.commit()
+        session.refresh(user_db)
+
+        return user_db
+    except Exception as e :
+        return str(e)
+
+@router.delete('/admin/{user_id}')
+def delete_user(user_id:Annotated[str, Path()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]) :
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(400, detail="You are not allow to do it")
+    
+    user_db = session.get(Users, UUID(user_id))
     if not (user_db) :
         raise HTTPException(status_code=404, detail="User not founded")
-    
-    user_body = user.model_dump(exclude_unset=True)
-    user_db.sqlmodel_update(user_body)
 
-    session.add(user_db)
-    session.commit()
-    session.refresh(user_db)
+    if user_db.email == "admin@admin.com":
+            raise HTTPException(status_code=400, detail="Admin user is immutable")
 
-    return user_db
-
-@router.delete('/{user_id}')
-def delete_user(user_id:Annotated[int, Path()], session: session_dependency) :
-    user_db = session.get(Users, user_id)
-    if not user_db :
-        raise HTTPException(status_code=404, detail="User not founded")
     session.delete(user_db)
     session.commit()
     return {"message":"User deleted"}
 
 @router.get("/", response_model=list[PublicUser])
 def retrieve_all_users(session: session_dependency):
+    users = session.exec(select(Users)).all()
+    return users
+
+@router.get("/admin/")
+def retrieve_all_users_admin(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
+    user_accessing = decode_token(token)
+    is_user_admin = user_accessing.get('is_admin')
+    if not (is_user_admin) :
+        raise HTTPException(400, detail="You are not allow to do it")
     users = session.exec(select(Users)).all()
     return users
 

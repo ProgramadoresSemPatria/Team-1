@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header, HTTPException
+from fastapi import APIRouter, File, UploadFile, Body, Depends, Query, Path, Header, HTTPException, status
 from typing import Annotated, Union
 import pandas as pd
 from sqlmodel import Session, select, text
@@ -31,7 +31,7 @@ vectorizer = joblib.load('ml_model/model/vectorizer.pkl')
 session_dependency = Annotated[Session, Depends(get_session)]
 
 
-@router.post('/input')
+@router.post('/input', status_code=status.HTTP_201_CREATED)
 async def upload_file(file: Annotated[UploadFile, File()], session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         today = datetime.now()
@@ -71,8 +71,8 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         session.commit()
     except Exception as e :
         if "UNIQUE constraint failed: airesponsetags.key" in str(e):
-            return {"message":"Error", "erro": "Tag/Document name already analyzed. Please choose another or rename it"} 
-        return {"message":"Error", "erro": str(e)}
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Tag/Document name already analyzed. Please choose another or rename it")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     
     session.refresh(dict_to_db)
     return {"message": "success", "sample": result}
@@ -82,7 +82,7 @@ async def find_feedback(keywords:Annotated[list[str], Body()]):
     # ALL THE AI LOGIC HERE
     return {"message": "We are searching for feedbacks for you, please wait until finish!", "keywords": keywords}
 
-@router.get('/input/group/')
+@router.get('/input/group/', status_code=status.HTTP_200_OK)
 def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try:
         user = decode_token(token.removeprefix("bearer ").removeprefix("Bearer "))
@@ -97,9 +97,9 @@ def results_by_day(session: session_dependency, token: Annotated[str, Depends(o_
         ]
         return to_return
     except Exception as e:
-        return {"message": "erro", "erro": str(e)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.get('/input/distinct_tag')
+@router.get('/input/distinct_tag', status_code=status.HTTP_200_OK)
 def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         user = decode_token(token)
@@ -107,15 +107,15 @@ def distinct_tag(session: session_dependency, token: Annotated[str, Depends(o_au
         result = session.execute(text(f"SELECT DISTINCT tag FROM AiResponseTags WHERE user_id='{user_id.replace('-', '')}'"))
         return [i[0] for i in result.all()]
     except Exception as e:
-        return {"message": "erro", "erro": str(e)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.post('/input/filter/')
+@router.post('/input/filter/', status_code=status.HTTP_200_OK)
 def filter_inputted(
     session: session_dependency, 
     token: Annotated[str, Depends(o_auth_pass_bearer)],
-    tags: Annotated[list[str] | None, Body()] = None,
+    tags: Annotated[dict[str,list[str]] | None, Body()] = None,
     sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
-    items_per_page:Annotated[int, Query(le=100)] = 10, 
+    items_per_page:Annotated[int, Query()] = 10, 
     page:Annotated[int, Query()] = 1,
     date:Annotated[str | None, Query()] = None, 
     date_operator:Annotated[DateOperator | None, Query()] = None, 
@@ -124,7 +124,7 @@ def filter_inputted(
     user_id = str(user.get("id"))
 
     if (date and not date_operator) or (date_operator and not date) :
-        return {"message": "Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]"}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please provide operator and data to filter - operators: [gte, gt, e, lt, lte]")
 
 
     filters = {}
@@ -149,9 +149,9 @@ def filter_inputted(
         return to_return
     except Exception as e:
         print(e)
-        return {"message" : "Failed to get data!", "erro" : str(e._message)}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.delete('/input/delete/{tag}')
+@router.delete('/input/delete/{tag}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_response(session:session_dependency, tag:Annotated[str, Path()], token: Annotated[str, Depends(o_auth_pass_bearer)]):
     try :
         user = decode_token(token)
@@ -169,5 +169,4 @@ def delete_response(session:session_dependency, tag:Annotated[str, Path()], toke
         session.commit()
     
     except Exception as e:
-        return {"message": "Failed to delete", "erro": str(e)}
-    return {"message": f"Input successfully deleted: {tag}"}
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

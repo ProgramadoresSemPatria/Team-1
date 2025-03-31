@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends, Header, HTTPException
 from typing import Annotated
-
 from sqlmodel import Session
 
 from api.routers import auth, Users, Search
 from api.db import create_all_table_and_db, get_session
 from api.utils.token import decode_token, protected_endpoint
+from api.utils.create_admin import create_admin
 
 description = """
 # Feed AI
@@ -36,6 +36,7 @@ app.include_router(Search.router, prefix="/api")
 @app.on_event("startup")
 def creating_on_startup():
     create_all_table_and_db()
+    create_admin()
 
 @app.get("/api")
 def root(token: Annotated[protected_endpoint, Depends()]):

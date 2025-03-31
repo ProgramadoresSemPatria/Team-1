@@ -1,11 +1,10 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
-import HeroImage from '@/assets/hero-image.png';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { WordCascade } from './WordCascade';
 
-// TODO: Fix responsive in AspectRatio component
+import UploadPhoto from '@/assets/Upload.png';
 
 export function HeroSection() {
   return (
@@ -16,7 +15,7 @@ export function HeroSection() {
       className="bg-gray-100 flex flex-col items-center justify-center lg:items-start lg:text-start lg:w-full lg:max-h-[70vh] lg:px-40 lg:flex-row"
     >
       <div className="flex flex-col">
-        <h1 className="font-bold text-4xl mt-16 mb-5 md:text-6xl">
+        <h1 className="font-bold text-4xl mt-10 mb-5 md:text-6xl">
           Understand customer feedback{' '}
           <WordCascade
             words={['in seconds', 'very fast', 'at once', 'quickly', 'shortly']}
@@ -34,15 +33,19 @@ export function HeroSection() {
         </Button>
       </div>
 
-      <div className="flex flex-col w-full items-center gap-20">
+      <div className="flex flex-col w-full items-center">
         <AspectRatio
           ratio={16 / 9}
-          className="lg:max-h-[70vh] w-full p-10 2xl:mt-0"
+          className="lg:max-h-[70vh] w-full px-4 mt-10 lg:mt-20 lg:ml-20"
         >
-          <img src={HeroImage} alt="Landing Page" className="rounded-lg" />
+          <img
+            src={UploadPhoto}
+            alt="Landing Page"
+            className="rounded-lg shadow-sm shadow-black/80"
+          />
         </AspectRatio>
 
-        <Button className="shadow-lg shadow-black/80 mt-16 mb-10 w-10/11 h-12 py-7 bg-sky-700 font-bold text-lg text-white lg:hidden hover:scale-105 hover:bg-sky-800">
+        <Button className="shadow-lg shadow-black/80 mt-16 mb-10 w-10/11 h-12 py-7 bg-sky-700 font-bold text-lg text-white lg:hidden hover:scale-105 hover:bg-sky-800 hover:cursor-pointer">
           Get Started <ArrowRight className="w-5 h-5 font-bold mt-0.5" />
         </Button>
       </div>

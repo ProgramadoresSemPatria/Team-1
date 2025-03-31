@@ -25,7 +25,7 @@ export function PricingSection() {
           </div>
         </TabsContent>
         <TabsContent value="yearly">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20 md:w-full">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-20 md:w-full md:min-w-[1000px]">
             <CardStandard isYearly={true} />
             <CardPro isYearly={true} />
           </div>

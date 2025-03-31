@@ -1,4 +1,4 @@
-import { BenefitCard } from '../BenefitCard/index';
+import { BenefitCard } from './BenefitCard/index';
 import {
   BrainCircuit,
   Clock,

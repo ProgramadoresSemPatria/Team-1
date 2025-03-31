@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react';
 
-const Spinner = ({ children }: { children: ReactNode }) => {
+const Spinner = ({
+  children,
+  textColor = 'text-white',
+}: { children: ReactNode; textColor?: string }) => {
   return (
     <div className="flex items-center justify-center">
       {/* biome-ignore lint/a11y/noSvgWithoutTitle:  */}
       <svg
-        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+        className={`animate-spin -ml-1 mr-3 h-5 w-5 ${textColor}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

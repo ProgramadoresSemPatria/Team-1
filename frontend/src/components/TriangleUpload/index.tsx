@@ -41,9 +41,9 @@ const TriangleUpload = () => {
 	};
 
 	useEffect(() => {
-		if (data?.data) {
+		if (data?.data.sample) {
 			// biome-ignore lint/complexity/noForEach:
-			data.data.forEach((item: Feedback) => addFeedback(item));
+			data.data.sample.forEach((item: Feedback) => addFeedback(item));
 		}
 	}, [data, addFeedback]);
 

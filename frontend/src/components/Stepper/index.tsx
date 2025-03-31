@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { createContext, useCallback, useContext, useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { AnimatePresence, motion } from 'motion/react';
 
 interface IStepperContext {

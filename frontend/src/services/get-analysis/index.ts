@@ -7,6 +7,11 @@ export async function getAnalysis({ values }: { values: string[] }) {
       {
         tag: values,
       },
+      {
+        params: {
+          items_per_page: 100000,
+        }
+      }
     );
 
     return {

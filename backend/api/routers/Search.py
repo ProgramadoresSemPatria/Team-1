@@ -53,7 +53,7 @@ async def upload_file(file: Annotated[UploadFile, File()], session: session_depe
         X = vectorizer.transform(df['Text'])
         df['Sentiment_Prediction'] = model.predict(X)
         df_table = df.copy()
-        result = df[['Text', 'Sentiment_Prediction']].iloc[:30, :].to_dict(orient='records')
+        result = df[['Text', 'Sentiment_Prediction']].to_dict(orient='records')
 
 
         df_table.rename({"Text":"text", "Sentiment_Prediction":"sentiment_prediction"}, axis=1, inplace=True)

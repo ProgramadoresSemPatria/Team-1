@@ -130,7 +130,7 @@ Before you start, ensure you have `node`, `npm`, `docker` and `python` installed
 
 ## Deployed Version
 
-You can also visit the deployed version of the application [here](https://visaocria-module-code-breakers-qsns.vercel.app/).
+You can also visit the deployed version of the application [here](https://visaocria-module-code-breakers-qsns.vercel.app/](https://teamonehackaton.vercel.app/).
 
 
 ## Conclusion

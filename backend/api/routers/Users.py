@@ -14,6 +14,7 @@ from .auth import o_auth_pass_bearer
 from ..utils.token import create_hash_password
 from api.utils.token import decode_token
 from api.utils.response_helper import unique_constraint_message
+from ..utils.exception_handler import handle_exception
 from ..services.user_services import create_user, update_user, delete_user, retrieve_all_users, retrieve_user
 
 router = APIRouter(
@@ -22,17 +23,6 @@ router = APIRouter(
 )
 
 session_dependency = Annotated[Session, Depends(get_session)]
-
-def handle_exception(e: Exception):
-    """
-    Centralize exception handling for database operations.
-    Maps unique constraint violations to HTTP 400, others to HTTP 500.
-    """
-    error_str = str(e)
-    for error in ["unique constraint failed", "restrição de unicidade"]:
-        if error in error_str.lower():
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=unique_constraint_message(e))
-    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error_str)
 
 @router.post("/", response_model=BaseUser, status_code=status.HTTP_201_CREATED)
 def create_user_route(user: CreateUser, session: session_dependency):

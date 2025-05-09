@@ -3,6 +3,7 @@ from typing import Annotated, Union
 from sqlmodel import Session
 from ..db import get_session
 from ..enum.TagsEnum import TagsEnum
+from ..enum.DateOperator import DateOperator
 from ..services.search_services import upload_file, find_feedback, results_by_day, distinct_tag, filter_inputted, delete_response  # Atualização da importação
 from .auth import o_auth_pass_bearer
 
@@ -33,9 +34,14 @@ def distinct_tag_route(session: session_dependency, token: Annotated[str, Depend
 def filter_inputted_route(
     session: session_dependency, 
     token: Annotated[str, Depends(o_auth_pass_bearer)],
-    filters: Annotated[dict, Body()]
+    tags: Annotated[dict[str,list[str]] | None, Body()] = None,
+    sentiment:Annotated[Union[str, None], Query(regex="^(positivo|negativo|neutro)$", )] = None, 
+    items_per_page:Annotated[int, Query()] = 10, 
+    page:Annotated[int, Query()] = 1,
+    date:Annotated[str | None, Query()] = None, 
+    date_operator:Annotated[DateOperator | None, Query()] = None, 
 ):
-    return filter_inputted(session, token, filters)
+    return filter_inputted(session, token, tags, sentiment, items_per_page, page, date, date_operator)
 
 @router.delete('/input/delete/{tag}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_response_route(session: session_dependency, tag: Annotated[str, Path()], token: Annotated[str, Depends(o_auth_pass_bearer)]):

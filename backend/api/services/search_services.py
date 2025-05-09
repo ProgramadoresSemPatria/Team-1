@@ -8,8 +8,8 @@ from ..db.AIResponse import AiResponse
 from ..db.AIResponseTags import AiResponseTags
 from api.utils.token import decode_token
 from api.utils.query_helper import build_where_clause
+from api.enum.DateOperator import DateOperator
 from ml_model.preprocess import clear_text
-
 # Carregar modelos
 model = joblib.load('ml_model/model/modelo_sentimento.pkl') 
 vectorizer = joblib.load('ml_model/model/vectorizer.pkl') 
@@ -54,8 +54,9 @@ def upload_file(file, session: Session, token: str):
         session.add(dict_to_db)
         session.commit()
     except Exception as e:
-        if "UNIQUE constraint failed: airesponsetags.key" in str(e):
-            raise HTTPException(status_code=400, detail="Tag/Document name already analyzed. Please choose another or rename it")
+        for error in ["UNIQUE constraint failed", "restrição de unicidade"]:
+            if error in str(e).lower():
+                raise HTTPException(status_code=400, detail="Tag/Document name already analyzed. Please choose another or rename it")
         raise HTTPException(status_code=500, detail=str(e))
 
     session.refresh(dict_to_db)
@@ -92,12 +93,22 @@ def distinct_tag(session: Session, token: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-def filter_inputted(session: Session, token: str, filters: dict):
+def filter_inputted(session: Session, token: str, tags: dict, sentiment: str, items_per_page: int, page: int, date: str, date_operator: DateOperator):
     user = decode_token(token)
     user_id = str(user.get("id"))
 
-    if (filters.get('date') and not filters.get('date_operator')) or (filters.get('date_operator') and not filters.get('date')):
+    if (date and not date_operator) or (date_operator and not date):
         raise HTTPException(status_code=400, detail="Please provide operator and date to filter - operators: [gte, gt, e, lt, lte]")
+
+    filters = {}
+    if date and date_operator:
+        filters["airesponse.consulted_query_date"] = {"operator": date_operator.value, "value": date}
+    if sentiment:
+        filters["sentiment_prediction"] = [sentiment]
+    if tags:
+        tags_dict_key = list(tags.keys())[0]
+        filters['tag'] = tags[tags_dict_key]
+    filters['airesponse.user_id'] = [user_id.replace('-', '')]
 
     where_clause = build_where_clause(**filters)
     
@@ -109,9 +120,9 @@ def filter_inputted(session: Session, token: str, filters: dict):
     try:
         results = session.execute(text(statement)).all()
         return [
-            {"date": result[0], "sentiment": result[1], "text": result[2], "tag": result[3]}
-            for result in results
-        ]
+            {"date": result[0], "sentiment": result[1], "text": result[2], "tag" : result[3]}
+            for result in results[(page-1)*items_per_page:page*items_per_page]
+            ]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -7,6 +7,9 @@ from datetime import datetime, timezone, timedelta
 
 from passlib.context import CryptContext
 import jwt
+from jwt.exceptions import PyJWTError
+
+from .exception_handler import handle_auth_exception
 
 load_dotenv()
 
@@ -24,27 +27,26 @@ def verify_password(plain_password: str, hash_password: str) -> bool:
     """Verifies if the plain password matches the hash."""
     return pwd_context.verify(plain_password, hash_password)
 
-def create_token(data: object) -> str:
+def create_token(data: dict) -> str:
     """Creates a JWT token with data and an expiration date."""
     payload = data.copy()
     expiration = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload.update({"exp": str(int(expiration.timestamp()))})
+    payload.update({"exp": int(expiration.timestamp())})
     return jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_token(token: str) -> dict:
     """Decodes a JWT token and returns the data contained in it."""
     try:
-        return jwt.decode(token.removeprefix("Bearer ").removeprefix("bearer "), key=SECRET_KEY, algorithms=[ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        token = token.removeprefix("Bearer ").removeprefix("bearer ").strip()
+        return jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    except PyJWTError as e:
+        handle_auth_exception(e)
 
 def protected_endpoint(Authorization: Annotated[str, Header()]) -> str:
     """Verifies the validity of the authorization token."""
-    token = Authorization.removeprefix("bearer ").removeprefix("Bearer ")
     try:
+        token = Authorization.removeprefix("bearer ").removeprefix("Bearer ").strip()
         decode_token(token=token)
+        return token
     except HTTPException as e:
         raise e  # Re-raise the HTTPException for FastAPI to handle
-    return token

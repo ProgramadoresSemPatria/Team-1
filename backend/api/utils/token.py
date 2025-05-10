@@ -17,31 +17,31 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 3600 * 24
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 def create_hash_password(password: str) -> str:
-    """Cria um hash da senha usando bcrypt."""
+    """Creates a password hash using bcrypt."""
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hash_password: str) -> bool:
-    """Verifica se a senha em texto simples corresponde ao hash."""
+    """Verifies if the plain password matches the hash."""
     return pwd_context.verify(plain_password, hash_password)
 
 def create_token(data: object) -> str:
-    """Cria um token JWT com dados e uma data de expiração."""
+    """Creates a JWT token with data and an expiration date."""
     payload = data.copy()
     expiration = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     payload.update({"exp": str(int(expiration.timestamp()))})
     return jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_token(token: str) -> dict:
-    """Decodifica um token JWT e retorna os dados contidos nele."""
+    """Decodes a JWT token and returns the data contained in it."""
     try:
         return jwt.decode(token.removeprefix("Bearer ").removeprefix("bearer "), key=SECRET_KEY, algorithms=[ALGORITHM])
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expirado")
+        raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Token inválido")
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 def protected_endpoint(Authorization: Annotated[str, Header()]) -> str:
-    """Verifica a validade do token de autorização."""
+    """Verifies the validity of the authorization token."""
     token = Authorization.removeprefix("bearer ").removeprefix("Bearer ")
     try:
         decode_token(token=token)

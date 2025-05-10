@@ -1,14 +1,13 @@
-#Esse arquivo foi criado com o auxílio de IA
 from api.utils.operators import convert_text_to_operator
 
 def build_where_clause(**filters: dict) -> str:
-    """Constrói uma cláusula WHERE a partir de filtros fornecidos.
+    """Builds a WHERE clause from the provided filters.
 
     Args:
-        filters (dict): Um dicionário onde as chaves são os nomes das colunas e os valores são os filtros.
+        filters (dict): A dictionary where the keys are column names and the values are filters.
 
     Returns:
-        str: A cláusula WHERE gerada.
+        str: The generated WHERE clause.
     """
     where_clause_parts = []
 

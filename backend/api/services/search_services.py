@@ -10,7 +10,7 @@ from api.utils.token import decode_token
 from api.utils.query_helper import build_where_clause
 from api.enum.DateOperator import DateOperator
 from ml_model.preprocess import clear_text
-# Carregar modelos
+# Load models
 model = joblib.load('ml_model/model/modelo_sentimento.pkl') 
 vectorizer = joblib.load('ml_model/model/vectorizer.pkl') 
 
@@ -142,5 +142,3 @@ def delete_response(session: Session, tag: str, token: str):
         session.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-# Outras funções de serviço (results_by_day, distinct_tag, filter_inputted, delete_response) devem ser extraídas aqui

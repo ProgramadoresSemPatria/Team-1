@@ -1,20 +1,20 @@
 def unique_constraint_message(error: Exception) -> str:
-    """Gera uma mensagem de erro para violações de restrição de unicidade.
+    """Generates an error message for unique constraint violations.
 
     Args:
-        error (Exception): A exceção que contém a mensagem de erro.
+        error (Exception): The exception that contains the error message.
 
     Returns:
-        str: Mensagem indicando que o valor já está registrado.
+        str: Message indicating that the value is already registered.
     """
     string_error = str(error)
     
-    # Encontrar posições dos delimitadores
+    # Find delimiter positions
     dots_position = string_error.find(":")
     break_line_position = string_error.find("\n")
     dot_between_position = string_error.find(".", dots_position)
 
-    # Verificar se as posições são válidas
+    # Check if positions are valid
     if dot_between_position == -1 or break_line_position == -1:
         return "An error occurred. Please try again."
 

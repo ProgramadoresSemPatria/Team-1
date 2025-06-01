@@ -1,19 +1,27 @@
-import joblib
-import pandas as pd
-import uuid
 from datetime import datetime
 from fastapi import HTTPException
+import joblib
+import pandas as pd
+from pathlib import Path
 from sqlmodel import Session, select, text, delete
-from ..db.AIResponse import AiResponse
-from ..db.AIResponseTags import AiResponseTags
-from api.utils.token import decode_token
-from api.utils.query_helper import build_where_clause
+import uuid
+
+from api.db.AIResponse import AiResponse
+from api.db.AIResponseTags import AiResponseTags
 from api.enum.DateOperator import DateOperator
 from api.utils.exception_handler import handle_exception
+from api.utils.ml_loader import sentiment_model as model, text_vectorizer as vectorizer
+from api.utils.query_helper import build_where_clause
+from api.utils.token import decode_token
 from ml_model.preprocess import clear_text
+
+# Get the absolute path to the model files
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+MODEL_PATH = BASE_DIR / "ml_model" / "model"
+
 # Load models
-model = joblib.load('ml_model/model/modelo_sentimento.pkl') 
-vectorizer = joblib.load('ml_model/model/vectorizer.pkl') 
+model = joblib.load(MODEL_PATH / "modelo_sentimento.pkl")
+vectorizer = joblib.load(MODEL_PATH / "vectorizer.pkl")
 
 def upload_file(file, session: Session, token: str):
     """Upload and process a file with feedback data for sentiment analysis.
@@ -27,9 +35,14 @@ def upload_file(file, session: Session, token: str):
         dict: Response with success message and sample of the processed data
     """
     extension = file.filename.split('.')[-1].lower()
+    filename = file.filename.split('.')[0].lower()
     
     if extension not in ["csv", "xlsx"]:
         raise HTTPException(status_code=400, detail="Only '.csv' and '.xlsx' files available")
+    
+    all_files = session.exec(select(AiResponseTags.tag)).all()
+    if filename in all_files:
+        raise HTTPException(status_code=400, detail="Tag/Document name already analyzed. Please choose another or rename it")
     
     try:
         if extension == "csv":

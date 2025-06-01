@@ -11,6 +11,7 @@ from api.db import create_all_table_and_db, get_session
 from api.utils.token import decode_token, protected_endpoint
 from api.utils.create_admin import create_admin
 from api.utils.exception_handler import create_error_response, ERROR_CODES, handle_exception
+from api.routers import news
 
 description = """
 # Feed AI
@@ -76,6 +77,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api")
 app.include_router(Users.router, prefix="/api")
 app.include_router(Search.router, prefix="/api")
+app.include_router(news.router, prefix="/api")
 
 @app.on_event("startup")
 def creating_on_startup():

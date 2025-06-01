@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, create_engine, Session, select
+from sqlmodel import SQLModel, Field
 from pydantic import EmailStr, BaseModel
 
 import uuid

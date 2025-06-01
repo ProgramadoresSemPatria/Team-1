@@ -3,9 +3,9 @@ from sqlmodel import Session, select
 from typing import Dict, Any
 from pydantic import EmailStr
 
-from ..db.Users import Users, UserIn
-from ..utils.token import verify_password, create_token
-from ..utils.exception_handler import create_error_response, ERROR_CODES
+from api.db.Users import Users, UserIn
+from api.utils.exception_handler import create_error_response, ERROR_CODES
+from api.utils.token import verify_password, create_token
 
 # Common error message for failed login attempts (security best practice)
 INVALID_CREDENTIALS_ERROR = "Invalid email or password"

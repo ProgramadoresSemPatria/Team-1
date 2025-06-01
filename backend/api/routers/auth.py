@@ -1,15 +1,15 @@
-from fastapi import Depends, APIRouter, HTTPException, Body, Response, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Annotated, Dict, Any
 from sqlmodel import Session, select
 from pydantic import BaseModel
 
-from ..db import get_session
-from ..db.Users import Users, CreateUser, UserIn
-from ..utils.token import verify_password, create_token, decode_token
-from ..enum.TagsEnum import TagsEnum
-from ..services.auth_services import login_user_swagger, login_user
-from ..utils.exception_handler import handle_exception
+from api.db import get_session
+from api.db.Users import Users, CreateUser, UserIn
+from api.enum.TagsEnum import TagsEnum
+from api.utils.token import verify_password, create_token, decode_token
+from api.services.auth_services import login_user_swagger, login_user
+from api.utils.exception_handler import handle_exception
 
 # Define response models for better API documentation and type safety
 class TokenResponse(BaseModel):

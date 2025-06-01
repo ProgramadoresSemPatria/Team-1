@@ -1,10 +1,12 @@
 from fastapi import HTTPException, status
 from fastapi.exceptions import HTTPException as FastAPIHTTPException
-from api.utils.response_helper import unique_constraint_message
-import logging
 from jwt.exceptions import PyJWTError, ExpiredSignatureError, InvalidTokenError
+import logging
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, NoResultFound
-from typing import Optional, Dict, Any, Type, Union
+from typing import Optional, Dict, Any
+
+from api.utils.response_helper import unique_constraint_message
+
 
 # Logger configuration
 logging.basicConfig(level=logging.ERROR)

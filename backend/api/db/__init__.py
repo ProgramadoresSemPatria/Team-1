@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from .Users import BaseUser, CreateUser, Users
-from .AIResponse import AiResponse
-from .AIResponseTags import AiResponseTags
+from api.db.Users import BaseUser, CreateUser, Users
+from api.db.AIResponse import AiResponse
+from api.db.AIResponseTags import AiResponseTags
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 

@@ -1,15 +1,13 @@
-from fastapi import Header, HTTPException
-from typing import Annotated
-
-import os 
-from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
-
-from passlib.context import CryptContext
+from dotenv import load_dotenv
+from fastapi import Header, HTTPException
 import jwt
 from jwt.exceptions import PyJWTError
+import os 
+from passlib.context import CryptContext
+from typing import Annotated
 
-from .exception_handler import handle_auth_exception
+from api.utils.exception_handler import handle_auth_exception
 
 load_dotenv()
 
